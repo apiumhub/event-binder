@@ -1,27 +1,30 @@
 package dev.martori.kataeventarch.ui
 
-import android.arch.lifecycle.LifecycleOwner
 import android.support.v4.app.Fragment
 
 fun main() {
     val view = MainViewFrag()
     val service = MainServiceImple()
-    viewServiceBinder(view, service)
+    view.viewServiceBinder(view, service)
 }
 
-interface MainView : LifecycleOwner {
-    val showLoading: InEvent
-    val showData: InDataEvent<String>
-    val clickView: OutDataEvent<Int>
+interface MainView {
+    val showLoading: UInEvent
+    val showData: InEvent<String>
+    val clickView: OutEvent<Int>
 }
 
 interface MainService : Bindable {
-    val requestById: InDataEvent<Int>
-    val startedWork: OutEvent
-    val receivedData: OutDataEvent<String>
+    val requestById: InEvent<Int>
+    val startedWork: UOutEvent
+    val receivedData: OutEvent<String>
 }
 
+fun get(): MainService = TODO()
+
 class MainViewFrag : Fragment(), MainView {
+
+    val x = viewServiceBinder(this, get())
 
     override val clickView = outEvent<Int>()
 
@@ -45,10 +48,9 @@ class MainServiceImple : MainService {
     }
     override val startedWork = outEvent()
     override val receivedData = outEvent<String>()
-
 }
 
-fun viewServiceBinder(view: MainView, service: MainService) = bind(view) {
+fun ViewBinder.viewServiceBinder(view: MainView, service: MainService) = bind {
     view.clickView via service.requestById
     service.receivedData via view.showData
     service.startedWork via view.showLoading
