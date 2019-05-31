@@ -1,14 +1,17 @@
 package dev.martori.kataeventarch.ui
 
-import android.support.v4.app.Fragment
-
 fun main() {
     val view = MainViewFrag()
     val service = MainServiceImple()
-    view.viewServiceBinder(view, service)
+    val service2 = MainServiceImple()
+
+    viewServiceBinder(view, service)
+    viewServiceBinder(view, service2)
+
+    view.click()
 }
 
-interface MainView {
+interface MainView : Bindable {
     val showLoading: UInEvent
     val showData: InEvent<String>
     val clickView: OutEvent<Int>
@@ -20,11 +23,7 @@ interface MainService : Bindable {
     val receivedData: OutEvent<String>
 }
 
-fun get(): MainService = TODO()
-
-class MainViewFrag : Fragment(), MainView {
-
-    val x = viewServiceBinder(this, get())
+class MainViewFrag : MainView {
 
     override val clickView = outEvent<Int>()
 
@@ -50,7 +49,7 @@ class MainServiceImple : MainService {
     override val receivedData = outEvent<String>()
 }
 
-fun ViewBinder.viewServiceBinder(view: MainView, service: MainService) = bind {
+fun viewServiceBinder(view: MainView, service: MainService) = bind {
     view.clickView via service.requestById
     service.receivedData via view.showData
     service.startedWork via view.showLoading
