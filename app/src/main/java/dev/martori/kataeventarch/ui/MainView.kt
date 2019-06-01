@@ -1,5 +1,6 @@
 package dev.martori.kataeventarch.ui
 
+import cat.martori.eventarch.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
