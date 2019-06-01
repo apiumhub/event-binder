@@ -1,9 +1,9 @@
 package cat.martori.eventarch
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.lifecycleScope
 
 internal fun InternalBinder.lifecycleObserver(bindBlock: Binder.() -> Unit): LifecycleObserver =
     object : LifecycleObserver {
@@ -22,6 +22,6 @@ internal fun InternalBinder.lifecycleObserver(bindBlock: Binder.() -> Unit): Lif
         }
     }
 
-private val lifecycleBinders = mutableMapOf<LifecycleOwner, InternalBinder>()
-internal val LifecycleOwner.binder: InternalBinder
-    get() = lifecycleBinders[this] ?: InternalBinder().also { lifecycleBinders[this] = it }
+private val lifecycleBinders = mutableMapOf<ViewBinder, InternalBinder>()
+internal val ViewBinder.binder: InternalBinder
+    get() = lifecycleBinders[this] ?: InternalBinder(lifecycleScope).also { lifecycleBinders[this] = it }

@@ -1,17 +1,16 @@
 package cat.martori.eventarch
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import kotlin.coroutines.CoroutineContext
 
 internal fun getBinder(): Binder = internalBinder
 
-internal val internalBinder = InternalBinder()
+internal val internalBinder = InternalBinder(GlobalScope)
 
 internal class InEventInternal<T>(val func: (T) -> Unit) : InEvent<T>
 
@@ -33,19 +32,19 @@ internal class OutEventInternal<T>(val scope: CoroutineScope) : OutEvent<T> {
     }
 }
 
-internal class InternalBinder(override val coroutineContext: CoroutineContext = Job()) : Binder, CoroutineScope {
+internal class InternalBinder(private val coroutineScope: CoroutineScope) : Binder {
 
     override var binded: Boolean = false
         internal set
 
     override fun <T> OutEvent<T>.via(inEvent: InEvent<T>) {
         binded = true
-        launch {
+        coroutineScope.launch {
             (this@via as OutEventInternal<T>).flow.filter { binded }.collect {
                 (inEvent as InEventInternal<T>).func(it)
             }
         }
     }
 
-    fun <T> newOutEvent(): OutEvent<T> = OutEventInternal(this)
+    fun <T> newOutEvent(): OutEvent<T> = OutEventInternal(coroutineScope)
 }

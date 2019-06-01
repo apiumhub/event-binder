@@ -11,8 +11,8 @@ fun main() {
     val service = MainServiceImple()
     val service2 = MainServiceImple()
 
-    viewServiceBinder(view, service)
-    viewServiceBinder(view, service2)
+//    viewServiceBinder(view, service)
+//    viewServiceBinder(view, service2)
 
     runBlocking {
         launch {
