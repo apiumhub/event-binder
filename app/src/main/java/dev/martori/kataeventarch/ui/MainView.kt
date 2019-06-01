@@ -1,5 +1,10 @@
 package dev.martori.kataeventarch.ui
 
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+
 fun main() {
     val view = MainViewFrag()
     val service = MainServiceImple()
@@ -8,7 +13,14 @@ fun main() {
     viewServiceBinder(view, service)
     viewServiceBinder(view, service2)
 
-    view.click()
+    runBlocking {
+        launch {
+            view.click()
+            delay(500)
+            view.click()
+            delay(1000)
+        }
+    }
 }
 
 interface MainView : Bindable {
@@ -43,7 +55,10 @@ class MainViewFrag : MainView {
 class MainServiceImple : MainService {
     override val requestById = inEvent { id: Int ->
         startedWork()
-        receivedData("$id")
+        GlobalScope.launch {
+            delay(200)
+            receivedData("$id")
+        }
     }
     override val startedWork = outEvent()
     override val receivedData = outEvent<String>()

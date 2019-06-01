@@ -14,6 +14,6 @@ operator fun UOutEvent.invoke(): Unit = invoke(Unit)
 
 interface Binder {
     infix fun <T> OutEvent<T>.via(inEvent: InEvent<T>)
-    fun unBind()
+    val binded: Boolean
 }
 
