@@ -1,6 +1,7 @@
 package cat.martori.eventarch
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.collect
@@ -12,8 +13,6 @@ internal val internalBinder = InternalBinder(GlobalScope).apply { binded = true 
 
 internal class InEventInternal<T>(val func: (T) -> Unit) : InEvent<T>
 
-internal fun <T> newOutEvent(): OutEvent<T> = OutEventInternal(GlobalScope)
-
 internal class OutEventInternal<T>(private val scope: CoroutineScope) : OutEvent<T> {
     val flow = flow<T> {
         emitters.add(this)
@@ -22,8 +21,8 @@ internal class OutEventInternal<T>(private val scope: CoroutineScope) : OutEvent
     private var emitters = mutableListOf<FlowCollector<T>>()
 
     override fun invoke(data: T) {
-        scope.launch {
-            emitters.forEach {
+        emitters.forEach {
+            scope.launch(Dispatchers.Main) {
                 runCatching {
                     it.emit(data)
                 }
@@ -40,7 +39,7 @@ internal class InternalBinder(private val coroutineScope: CoroutineScope) : Bind
     override fun <T> OutEvent<T>.via(inEvent: InEvent<T>) {
         val flow = (this@via as OutEventInternal<T>).flow
         val func = (inEvent as InEventInternal<T>).func
-        coroutineScope.launch {
+        coroutineScope.launch(Dispatchers.Main) {
             flow.filter { binded }.collect { func(it) }
         }
     }

@@ -7,14 +7,13 @@ import cat.martori.eventarch.outEvent
 import dev.martori.kataeventarch.binding.MainService
 import dev.martori.kataeventarch.ui.MainActivity.Companion.LEFT
 import dev.martori.kataeventarch.ui.MainActivity.Companion.RIGHT
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class MainDelayService : MainService {
     override val requestTextById: InEvent<Int> = inEvent { id ->
-        GlobalScope.launch {
-            delay(200)
+        runBlocking {
+            delay(500)
             sendText(calculateText(id))
         }
     }
