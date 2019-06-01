@@ -8,9 +8,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
-internal fun getBinder(): Binder = internalBinder
-
-internal val internalBinder = InternalBinder(GlobalScope)
+internal val internalBinder = InternalBinder(GlobalScope).apply { binded = true }
 
 internal class InEventInternal<T>(val func: (T) -> Unit) : InEvent<T>
 
@@ -38,11 +36,10 @@ internal class InternalBinder(private val coroutineScope: CoroutineScope) : Bind
         internal set
 
     override fun <T> OutEvent<T>.via(inEvent: InEvent<T>) {
-        binded = true
+        val flow = (this@via as OutEventInternal<T>).flow
+        val func = (inEvent as InEventInternal<T>).func
         coroutineScope.launch {
-            (this@via as OutEventInternal<T>).flow.filter { binded }.collect {
-                (inEvent as InEventInternal<T>).func(it)
-            }
+            flow.filter { binded }.collect { func(it) }
         }
     }
 

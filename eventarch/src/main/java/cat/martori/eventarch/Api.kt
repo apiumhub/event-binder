@@ -26,4 +26,4 @@ fun Bindable.inEvent(block: () -> Unit): UInEvent = inEvent<Unit> { block() }
 fun <T> Bindable.inEvent(block: (T) -> Unit): InEvent<T> =
     InEventInternal(block)
 
-fun bind(bindBlock: Binder.() -> Unit): Binder = getBinder().apply { bindBlock() }
+fun bind(bindBlock: Binder.() -> Unit): Binder = internalBinder.apply { bindBlock() }

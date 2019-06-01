@@ -7,20 +7,22 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 fun main() {
-    val view = MainViewFrag()
-    val service = MainServiceImple()
-    val service2 = MainServiceImple()
-
-//    viewServiceBinder(view, service)
-//    viewServiceBinder(view, service2)
-
     runBlocking {
+        val view = MainViewFrag()
+        val service = MainServiceImple()
+        val service2 = MainServiceImple()
+
+        viewServiceBinder(view, service)
+        viewServiceBinder(view, service2)
+
         launch {
             view.click()
             delay(500)
             view.click()
             delay(1000)
         }
+
+        delay(2000)
     }
 }
 
