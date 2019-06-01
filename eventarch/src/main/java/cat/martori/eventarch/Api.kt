@@ -17,12 +17,7 @@ interface Binder {
     val binded: Boolean
 }
 
-@JvmName("uOutEvent")
-fun Bindable.outEvent(): UOutEvent = outEvent<Unit>()
-
-fun <T> Bindable.outEvent(): OutEvent<T> = internalBinder.newOutEvent()
-
-fun Bindable.inEvent(block: () -> Unit): UInEvent = inEvent<Unit> { block() }
+fun <T> Bindable.outEvent(): OutEvent<T> = newOutEvent()
 fun <T> Bindable.inEvent(block: (T) -> Unit): InEvent<T> =
     InEventInternal(block)
 

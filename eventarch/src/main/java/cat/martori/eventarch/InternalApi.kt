@@ -12,7 +12,9 @@ internal val internalBinder = InternalBinder(GlobalScope).apply { binded = true 
 
 internal class InEventInternal<T>(val func: (T) -> Unit) : InEvent<T>
 
-internal class OutEventInternal<T>(val scope: CoroutineScope) : OutEvent<T> {
+internal fun <T> newOutEvent(): OutEvent<T> = OutEventInternal(GlobalScope)
+
+internal class OutEventInternal<T>(private val scope: CoroutineScope) : OutEvent<T> {
     val flow = flow<T> {
         emitters.add(this)
     }
@@ -21,8 +23,8 @@ internal class OutEventInternal<T>(val scope: CoroutineScope) : OutEvent<T> {
 
     override fun invoke(data: T) {
         scope.launch {
-            runCatching {
-                emitters.forEach {
+            emitters.forEach {
+                runCatching {
                     it.emit(data)
                 }
             }
@@ -43,5 +45,5 @@ internal class InternalBinder(private val coroutineScope: CoroutineScope) : Bind
         }
     }
 
-    fun <T> newOutEvent(): OutEvent<T> = OutEventInternal(coroutineScope)
 }
+

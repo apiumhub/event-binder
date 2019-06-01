@@ -10,7 +10,6 @@ internal fun InternalBinder.lifecycleObserver(bindBlock: Binder.() -> Unit): Lif
         init {
             bindBlock()
         }
-
         @OnLifecycleEvent(Lifecycle.Event.ON_START)
         fun bind() {
             binded = true
