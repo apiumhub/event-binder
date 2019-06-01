@@ -2,14 +2,16 @@ package cat.martori.eventarch
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
-internal val internalBinder = InternalBinder(GlobalScope).apply { binded = true }
+internal val scope = CoroutineScope(Dispatchers.Default + Job())
+
+internal val internalBinder = InternalBinder(scope).apply { binded = true }
 
 internal class InEventInternal<T>(val func: (T) -> Unit) : InEvent<T>
 
@@ -23,9 +25,7 @@ internal class OutEventInternal<T>(private val scope: CoroutineScope) : OutEvent
     override fun invoke(data: T) {
         emitters.forEach {
             scope.launch(Dispatchers.Main) {
-                runCatching {
-                    it.emit(data)
-                }
+                it.emit(data)
             }
         }
     }
