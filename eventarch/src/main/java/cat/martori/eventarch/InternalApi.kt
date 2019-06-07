@@ -5,9 +5,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel.Factory.BUFFERED
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 internal val scope = CoroutineScope(Dispatchers.Default + Job())
@@ -45,11 +45,7 @@ internal class InternalBinder(private val coroutineScope: CoroutineScope) : Bind
 }
 
 internal class OutEventInternal<T>(private val scope: CoroutineScope) : OutEvent<T> {
-    val flow = flow {
-        for (value in channel.openSubscription()) {
-            emit(value)
-        }
-    }
+    val flow get() = channel.asFlow()
 
     private val channel = BroadcastChannel<T>(BUFFERED)
 
