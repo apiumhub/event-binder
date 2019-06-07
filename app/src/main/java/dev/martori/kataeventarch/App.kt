@@ -1,7 +1,9 @@
 package dev.martori.kataeventarch
 
 import android.app.Application
+import dev.martori.kataeventarch.binding.CounterService
 import dev.martori.kataeventarch.binding.MainService
+import dev.martori.kataeventarch.domain.CounterServiceImpl
 import dev.martori.kataeventarch.domain.MainDelayService
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -20,4 +22,5 @@ class App : Application() {
 
 private val mainModule = module {
     single<MainService> { MainDelayService() }
+    single<CounterService> { CounterServiceImpl() }
 }

@@ -9,15 +9,22 @@ import cat.martori.eventarch.inEvent
 import cat.martori.eventarch.outEvent
 import dev.martori.kataeventarch.R
 import dev.martori.kataeventarch.binding.MainView
+import dev.martori.kataeventarch.binding.bindMainViewCounterService
 import dev.martori.kataeventarch.binding.bindMainViewMainService
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.get
 
 class MainActivity : AppCompatActivity(), MainView {
+    override val showCounter: InEvent<Int> = inEvent {
+        tvCount.text = "clicked: $it"
+    }
 
     init {
         lifecycleScope.launchWhenCreated {
             bindMainViewMainService(this@MainActivity, get())
+            bindMainViewCounterService(this@MainActivity, get())
+            btnLeft.setOnClickListener { clickButton(LEFT) }
+            btnRight.setOnClickListener { clickButton(RIGHT) }
         }
     }
 
@@ -29,8 +36,6 @@ class MainActivity : AppCompatActivity(), MainView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        btnLeft.setOnClickListener { clickButton(LEFT) }
-        btnRight.setOnClickListener { clickButton(RIGHT) }
     }
 
     companion object {

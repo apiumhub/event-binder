@@ -6,7 +6,7 @@ import androidx.lifecycle.lifecycleScope
 typealias ViewBinder = LifecycleOwner
 
 
-fun <T> ViewBinder.outEvent(): OutEvent<T> = OutEventInternal(lifecycleScope)
+fun <T> ViewBinder.outEvent(): OutEvent<T> = OutEventInternal2(lifecycleScope)
 fun <T> ViewBinder.inEvent(block: (T) -> Unit): InEvent<T> = InEventInternal(block)
 
 @JvmName("extBind")
