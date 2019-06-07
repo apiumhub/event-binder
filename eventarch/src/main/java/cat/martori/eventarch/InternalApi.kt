@@ -5,7 +5,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel.Factory.BUFFERED
-import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
@@ -23,39 +22,36 @@ internal class InternalBinder(private val coroutineScope: CoroutineScope) : Bind
         internal set
 
     override fun <T> OutEvent<T>.via(inEvent: InEvent<T>) {
-        val flow = (this@via as OutEventInternal2<T>).flow
-        val func = (inEvent as InEventInternal<T>).func
         coroutineScope.launch(Dispatchers.Main) {
-            flow.filter { binded }.collect { func(it) }
+            this@via.bindedFlow().collect { inEvent.func(it) }
         }
     }
+
+    override fun <T> OutEvent<T>.viaU(inEvent: InEvent<Unit>) {
+        coroutineScope.launch(Dispatchers.Main) {
+            this@viaU.bindedFlow().collect {
+                inEvent.func(Unit)
+            }
+        }
+    }
+
+    override fun <T> InEvent<T>.via(outEvent: OutEvent<T>) {
+        outEvent via this@via
+    }
+
+    private fun <T> OutEvent<T>.bindedFlow() = (this as OutEventInternal<T>).flow.filter { binded }
+    private fun <T> InEvent<T>.func(data: T) = (this as InEventInternal<T>).func.invoke(data)
 
 }
 
 internal class OutEventInternal<T>(private val scope: CoroutineScope) : OutEvent<T> {
-    val flow = flow<T> {
-        emitters.add(this)
-    }
-
-    private var emitters = mutableListOf<FlowCollector<T>>()
-
-    override fun invoke(data: T) {
-        emitters.forEach {
-            scope.launch(Dispatchers.Main) {
-                it.emit(data)
-            }
-        }
-    }
-}
-
-internal class OutEventInternal2<T>(private val scope: CoroutineScope) : OutEvent<T> {
     val flow = flow {
         for (value in channel.openSubscription()) {
             emit(value)
         }
     }
 
-    val channel = BroadcastChannel<T>(BUFFERED)
+    private val channel = BroadcastChannel<T>(BUFFERED)
 
     override fun invoke(data: T) {
         scope.launch {
