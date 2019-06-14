@@ -17,7 +17,9 @@ operator fun OutEventU.invoke(): Unit = invoke(Unit)
 
 interface Binder {
     infix fun <T> OutEvent<T>.via(inEvent: InEvent<T>)
-    infix fun <T> OutEvent<T>.viaU(inEvent: InEvent<Unit>)
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("viaU")
+    infix fun <T> OutEvent<T>.via(inEvent: InEvent<Unit>)
     infix fun <T> InEvent<T>.via(outEvent: OutEvent<T>)
     val binded: Boolean
 }

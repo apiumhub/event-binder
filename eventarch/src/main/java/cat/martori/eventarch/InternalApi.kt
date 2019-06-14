@@ -27,9 +27,11 @@ internal class InternalBinder(private val coroutineScope: CoroutineScope) : Bind
         }
     }
 
-    override fun <T> OutEvent<T>.viaU(inEvent: InEvent<Unit>) {
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("viaU")
+    override fun <T> OutEvent<T>.via(inEvent: InEvent<Unit>) {
         coroutineScope.launch(Dispatchers.Main) {
-            this@viaU.bindedFlow().collect {
+            this@via.bindedFlow().collect {
                 inEvent.func(Unit)
             }
         }
