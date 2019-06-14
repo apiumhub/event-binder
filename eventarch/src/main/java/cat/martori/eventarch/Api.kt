@@ -21,7 +21,6 @@ interface Binder {
     @JvmName("viaU")
     infix fun <T> OutEvent<T>.via(inEvent: InEvent<Unit>)
     infix fun <T> InEvent<T>.via(outEvent: OutEvent<T>)
-    val binded: Boolean
 }
 
 fun <T> Bindable.outEvent(): OutEvent<T> = OutEventInternal(CoroutineScope(Dispatchers.Default))

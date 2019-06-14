@@ -5,4 +5,4 @@ import kotlinx.coroutines.CoroutineScope
 
 private val scopedBinders = mutableMapOf<CoroutineScope, InternalBinder>()
 internal val CoroutineScope.binder: InternalBinder
-    get() = scopedBinders[this] ?: InternalBinder(this).apply { binded = true }.also { scopedBinders[this] = it }
+    get() = scopedBinders[this] ?: InternalBinder(this).also { scopedBinders[this] = it }
