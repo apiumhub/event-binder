@@ -1,4 +1,4 @@
-package cat.martori.eventarch
+package dev.martori.eventarch
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver

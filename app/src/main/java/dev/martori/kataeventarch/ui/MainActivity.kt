@@ -2,10 +2,10 @@ package dev.martori.kataeventarch.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import cat.martori.eventarch.InEvent
-import cat.martori.eventarch.OutEvent
-import cat.martori.eventarch.inEvent
-import cat.martori.eventarch.outEvent
+import dev.martori.eventarch.InEvent
+import dev.martori.eventarch.OutEvent
+import dev.martori.eventarch.inEvent
+import dev.martori.eventarch.outEvent
 import dev.martori.kataeventarch.R
 import dev.martori.kataeventarch.binding.MainView
 import dev.martori.kataeventarch.binding.bindMainViewCounterService

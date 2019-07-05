@@ -1,4 +1,4 @@
-package cat.martori.eventarch
+package dev.martori.eventarch
 
 import kotlinx.coroutines.CoroutineScope
 

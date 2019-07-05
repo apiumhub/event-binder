@@ -1,2 +1,1 @@
-<manifest
-        package="cat.martori.eventarch"/>
+<manifest package="dev.martori.eventarch" />

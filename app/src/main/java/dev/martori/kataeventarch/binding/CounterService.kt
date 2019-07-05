@@ -1,8 +1,8 @@
 package dev.martori.kataeventarch.binding
 
-import cat.martori.eventarch.Bindable
-import cat.martori.eventarch.InEventU
-import cat.martori.eventarch.OutEvent
+import dev.martori.eventarch.Bindable
+import dev.martori.eventarch.InEventU
+import dev.martori.eventarch.OutEvent
 
 interface CounterService : Bindable {
     val totalCount: OutEvent<Int>

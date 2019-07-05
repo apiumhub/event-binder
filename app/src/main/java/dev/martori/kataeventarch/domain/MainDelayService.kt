@@ -1,9 +1,9 @@
 package dev.martori.kataeventarch.domain
 
-import cat.martori.eventarch.InEvent
-import cat.martori.eventarch.OutEvent
-import cat.martori.eventarch.inEvent
-import cat.martori.eventarch.outEvent
+import dev.martori.eventarch.InEvent
+import dev.martori.eventarch.OutEvent
+import dev.martori.eventarch.inEvent
+import dev.martori.eventarch.outEvent
 import dev.martori.kataeventarch.binding.MainService
 import dev.martori.kataeventarch.ui.MainActivity.Companion.LEFT
 import dev.martori.kataeventarch.ui.MainActivity.Companion.RIGHT
