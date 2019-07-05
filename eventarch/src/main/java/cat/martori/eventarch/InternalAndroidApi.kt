@@ -8,12 +8,12 @@ import androidx.lifecycle.lifecycleScope
 internal fun InternalBinder.lifecycleObserver(bindBlock: Binder.() -> Unit): LifecycleObserver =
     object : LifecycleObserver {
         @OnLifecycleEvent(Lifecycle.Event.ON_START)
-        fun bind() {
+        fun start() {
             bindBlock()
         }
         @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-        fun unBind() {
-            this@lifecycleObserver.unbind()
+        fun stop() {
+            unbind()
         }
     }
 

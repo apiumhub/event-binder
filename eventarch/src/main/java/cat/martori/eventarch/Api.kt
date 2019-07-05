@@ -4,7 +4,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 interface Bindable
-
 interface InEvent<T>
 typealias InEventU = InEvent<Unit>
 
@@ -20,6 +19,7 @@ interface Binder {
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("viaU")
     infix fun <T> OutEvent<T>.via(inEvent: InEvent<Unit>)
+
     infix fun <T> InEvent<T>.via(outEvent: OutEvent<T>)
 }
 
