@@ -4,8 +4,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 interface Bindable
-interface InEvent<T>
+interface InEvent<T> {
+    fun dispatch(value: T)
+}
 typealias InEventU = InEvent<Unit>
+
+fun InEventU.dispatch() = dispatch(Unit)
 
 interface OutEvent<T> {
     operator fun invoke(data: T)
@@ -21,6 +25,7 @@ interface Binder {
     infix fun <T> OutEvent<T>.via(inEvent: InEvent<Unit>)
 
     infix fun <T> InEvent<T>.via(outEvent: OutEvent<T>)
+    fun unbind()
 }
 
 fun <T> Bindable.outEvent(): OutEvent<T> = OutEventInternal(CoroutineScope(Dispatchers.Default))

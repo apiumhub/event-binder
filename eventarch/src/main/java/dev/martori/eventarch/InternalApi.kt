@@ -13,10 +13,12 @@ internal val scope = CoroutineScope(Dispatchers.Default + Job())
 
 internal val internalBinder = InternalBinder(scope)
 
-internal class InEventInternal<T>(val func: (T) -> Unit) : InEvent<T>
+internal class InEventInternal<T>(val func: (T) -> Unit) : InEvent<T> {
+    override fun dispatch(value: T) = func(value)
+}
 
 internal class InternalBinder(private val coroutineScope: CoroutineScope) : Binder {
-    internal fun unbind() = jobs.forEach { it.cancel() }
+    override fun unbind() = jobs.forEach { it.cancel() }
 
     private val jobs = mutableListOf<Job>()
 
