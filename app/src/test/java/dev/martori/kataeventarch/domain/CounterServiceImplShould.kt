@@ -2,6 +2,7 @@ package dev.martori.kataeventarch.domain
 
 import dev.martori.eventarch.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert.assertEquals
@@ -14,7 +15,7 @@ class CounterServiceImplShould : Bindable {
 
     @Before
     fun setUp() {
-        Dispatchers.setMain(Dispatchers.Unconfined)
+        Dispatchers.setMain(TestCoroutineDispatcher())
     }
 
     @Test
@@ -53,5 +54,19 @@ class CounterServiceImplShould : Bindable {
         }
 
         sut.modifyCounterTest()
+    }
+
+    @Test
+    fun `test example 4`() = runBlockingTest {
+        //currently fails
+        val localEvent: OutEventU = outEvent()
+        bind {
+            sut.modifyCounter via localEvent
+            sut.totalCount via inEvent<Int> {
+                assertEquals(1, it)
+            }
+        }
+
+        localEvent()
     }
 }
