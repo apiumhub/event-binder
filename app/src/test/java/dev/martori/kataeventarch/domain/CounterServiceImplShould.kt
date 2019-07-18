@@ -58,15 +58,39 @@ class CounterServiceImplShould : Bindable {
 
     @Test
     fun `test example 4`() = runBlockingTest {
-        //currently fails
         val localEvent: OutEventU = outEvent()
         bind {
             sut.modifyCounter via localEvent
-            sut.totalCount via inEvent<Int> {
+            sut.totalCount via verify<Int> {
                 assertEquals(1, it)
             }
         }
-
         localEvent()
     }
+
+    @Test
+    fun `test example 5`() = runBlockingTest {
+        val localEvent: OutEventU = outEvent()
+        bind {
+            sut.modifyCounter via localEvent
+            sut.totalCount via verify<Int> {
+                assertEquals(1, it)
+            }
+            localEvent()
+        }
+    }
+
+    private infix fun <T> Binder.verify(block: (T) -> Unit): InEvent<T> = (object : Bindable {}).inEvent {
+        block(it)
+        unbind()
+    }
+
+    fun ScopeBinder.testBind(bindBlock: Binder.() -> Unit): Binder = bind {
+        bindBlock()
+
+    }
+
+    private fun <T> ScopeBinder.dispatch(data: T): OutEvent<T> = outEvent<T>().apply { invoke(data) }
+    private fun ScopeBinder.dispatch(): OutEventU = dispatch(Unit)
+
 }
