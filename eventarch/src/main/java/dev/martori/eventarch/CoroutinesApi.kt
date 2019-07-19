@@ -9,3 +9,6 @@ fun ScopeBinder.bind(bindBlock: Binder.() -> Unit): Binder = bind(this, bindBloc
 
 fun bind(coroutineScope: ScopeBinder? = null, bindBlock: Binder.() -> Unit): Binder =
     coroutineScope?.binder?.apply(bindBlock) ?: bind(bindBlock)
+
+fun <T> ScopeBinder.outEvent(): OutEvent<T> = OutEventInternal(this)
+fun <T> ScopeBinder.inEvent(block: (T) -> Unit): InEvent<T> = InEventInternal(block)

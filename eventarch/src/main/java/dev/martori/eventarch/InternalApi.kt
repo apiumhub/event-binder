@@ -18,7 +18,9 @@ internal class InEventInternal<T>(val func: (T) -> Unit) : InEvent<T> {
 }
 
 internal class InternalBinder(private val coroutineScope: CoroutineScope) : Binder {
-    override fun unbind() = jobs.forEach { it.cancel() }
+    override fun unbind() {
+        jobs.onEach { it.cancel() }.removeAll { !it.isActive }
+    }
 
     private val jobs = mutableListOf<Job>()
 
@@ -47,11 +49,13 @@ internal class InternalBinder(private val coroutineScope: CoroutineScope) : Bind
 internal class OutEventInternal<T>(private val scope: CoroutineScope) : OutEvent<T> {
     val flow get() = channel.asFlow()
 
-    private val channel = BroadcastChannel<T>(CONFLATED)
+    private val channel =
+        BroadcastChannel<T>(CONFLATED) //TODO look into closing this when appropriate
 
     override fun invoke(data: T) {
         scope.launch(Dispatchers.Main) {
             channel.send(data)
         }
     }
+
 }
