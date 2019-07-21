@@ -1,9 +1,9 @@
 package dev.martori.kataeventarch.binding
 
-import dev.martori.eventarch.InEvent
-import dev.martori.eventarch.OutEvent
+import cat.martori.core.InEvent
+import cat.martori.core.OutEvent
+import cat.martori.core.bind
 import dev.martori.eventarch.ViewBinder
-import dev.martori.eventarch.bind
 
 interface MainView {
     val clickButton: OutEvent<Int>

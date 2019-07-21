@@ -1,8 +1,8 @@
 package dev.martori.kataeventarch.binding
 
-import dev.martori.eventarch.Bindable
-import dev.martori.eventarch.InEvent
-import dev.martori.eventarch.OutEvent
+import cat.martori.core.Bindable
+import cat.martori.core.InEvent
+import cat.martori.core.OutEvent
 
 interface MainService : Bindable {
     val requestTextById: InEvent<Int>

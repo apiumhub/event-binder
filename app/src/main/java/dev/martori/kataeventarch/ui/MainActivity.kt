@@ -2,8 +2,8 @@ package dev.martori.kataeventarch.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import dev.martori.eventarch.InEvent
-import dev.martori.eventarch.OutEvent
+import cat.martori.core.InEvent
+import cat.martori.core.OutEvent
 import dev.martori.eventarch.inEvent
 import dev.martori.eventarch.outEvent
 import dev.martori.kataeventarch.R

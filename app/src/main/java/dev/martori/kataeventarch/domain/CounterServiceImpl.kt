@@ -1,6 +1,6 @@
 package dev.martori.kataeventarch.domain
 
-import dev.martori.eventarch.*
+import cat.martori.core.*
 import dev.martori.kataeventarch.binding.CounterService
 
 class CounterServiceImpl : CounterService {

@@ -1,4 +1,4 @@
-package dev.martori.eventarch
+package cat.martori.core
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +28,10 @@ interface Binder {
     fun unbind()
 }
 
-fun <T> Bindable.outEvent(): OutEvent<T> = OutEventInternal(CoroutineScope(Dispatchers.Default))
-fun <T> Bindable.inEvent(block: (T) -> Unit): InEvent<T> = InEventInternal(block)
+fun <T> Bindable.outEvent(): OutEvent<T> =
+    OutEventInternal(CoroutineScope(Dispatchers.Default))
+
+fun <T> Bindable.inEvent(block: (T) -> Unit): InEvent<T> =
+    InEventInternal(block)
 
 fun bind(bindBlock: Binder.() -> Unit): Binder = internalBinder.apply { bindBlock() }

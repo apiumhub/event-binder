@@ -1,1 +1,1 @@
-include ':app', ':eventarch'
+include ':app', ':eventarch', ':eventarchtest', ':core'
