@@ -1,6 +1,8 @@
 package dev.martori.kataeventarch.domain
 
 import cat.martori.core.*
+import cat.martori.eventarchtest.Dispatched
+import cat.martori.eventarchtest.implies
 import cat.martori.eventarchtest.testBind
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -73,13 +75,26 @@ class CounterServiceImplShould : Bindable {
 
     @Test
     fun `test example 6`() = testBind {
-        sut.totalCount checkIt {
+        sut.modifyCounter.dispatch()
+        sut.totalCount dispatchedWith {
             assertEquals(1, it)
         }
-        sut.totalCount checkIt {
-            //                fail()
-        }
-        sut.modifyCounter.dispatch()
+        sut.totalCount never Dispatched
     }
 
+    @Test
+    fun `test example 7`() {
+        sut.modifyCounter implies {
+            sut.totalCount dispatchedWith { assertEquals(1, it) }
+//            sut.totalCount never Dispatched
+        }
+        sut.modifyCounter implies {
+            sut.totalCount dispatchedWith { assertEquals(2, it) }
+            sut.totalCount never Dispatched
+        }
+        sut.modifyCounter implies {
+            sut.totalCount dispatchedWith { assertEquals(3, it) }
+//            sut.totalCount never Dispatched
+        }
+    }
 }
