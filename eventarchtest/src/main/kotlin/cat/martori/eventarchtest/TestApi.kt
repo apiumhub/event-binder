@@ -5,14 +5,14 @@ import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.fail
 
 
-private val flags = mutableListOf<String>()
+private var counter = 0
 
 interface TestBinder : Binder, ScopeBinder {
 
     infix fun <T> OutEvent<T>.dispatchedWith(block: (T) -> Unit) {
-        flags += (toString())
+        counter++
         this via inEvent<T> {
-            flags.removeAt(0)
+            counter--
             block(it)
         }
     }
@@ -28,7 +28,7 @@ fun testBind(block: TestBinder.() -> Unit) = runBlockingTest {
     val testB = object : TestBinder, ScopeBinder by this, Binder by binded {}
     testB.block()
     binded.unbind()
-    if (flags.isNotEmpty()) fail("${flags[0]} was not called")
+    if (counter != 0) fail("Wanted but not dispatched OutEvent")
 }
 
 object Implyer
