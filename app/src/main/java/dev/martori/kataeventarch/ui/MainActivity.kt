@@ -2,6 +2,7 @@ package dev.martori.kataeventarch.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import cat.martori.core.InEvent
 import cat.martori.core.OutEvent
 import dev.martori.eventarch.inEvent
@@ -23,11 +24,17 @@ class MainActivity : AppCompatActivity(), MainView {
         tvMainText.text = it
     }
 
+    init {
+        lifecycleScope.launchWhenCreated {
+
+            bindMainViewMainService(this@MainActivity, get())
+            bindMainViewCounterService(this@MainActivity, get())
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        bindMainViewMainService(this, get())
-        bindMainViewCounterService(this, get())
         btnLeft.setOnClickListener { clickButton(LEFT) }
         btnRight.setOnClickListener { clickButton(RIGHT) }
     }

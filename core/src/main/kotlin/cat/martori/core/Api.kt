@@ -5,11 +5,11 @@ import kotlinx.coroutines.Dispatchers
 
 interface Bindable
 interface InEvent<T> {
-    fun dispatch(value: T)
+    suspend fun dispatch(value: T)
 }
 typealias InEventU = InEvent<Unit>
 
-fun InEventU.dispatch() = dispatch(Unit)
+suspend fun InEventU.dispatch() = dispatch(Unit)
 
 interface OutEvent<T> {
     operator fun invoke(data: T)
@@ -31,7 +31,7 @@ interface Binder {
 fun <T> Bindable.outEvent(): OutEvent<T> =
     OutEventInternal(CoroutineScope(Dispatchers.Default))
 
-fun <T> Bindable.inEvent(block: (T) -> Unit): InEvent<T> =
+fun <T> Bindable.inEvent(block: suspend (T) -> Unit): InEvent<T> =
     InEventInternal(block)
 
 fun bind(bindBlock: Binder.() -> Unit): Binder = internalBinder.apply { bindBlock() }

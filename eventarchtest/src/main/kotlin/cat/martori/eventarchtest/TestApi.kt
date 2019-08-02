@@ -1,8 +1,8 @@
 package cat.martori.eventarchtest
 
 import cat.martori.core.*
-import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Assert.fail
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.runBlocking
 
 
 private var counter = 0
@@ -18,34 +18,31 @@ interface TestBinder : Binder, ScopeBinder {
     }
 
     infix fun <T> OutEvent<T>.never(dispatched: Dispatched) {
-        this via inEvent<T> { fail("${toString()} should not be called") }
+        this via inEvent<T> { throw Error("Dispatched an OutEvent that should not be dispatched") }
     }
 }
 
 
-fun testBind(block: TestBinder.() -> Unit) = runBlockingTest {
+fun CoroutineScope.testBind(block: TestBinder.() -> Unit) {
     val binded = bind { }
     val testB = object : TestBinder, ScopeBinder by this, Binder by binded {}
     testB.block()
     binded.unbind()
-    if (counter != 0) fail("Wanted but not dispatched OutEvent")
+    if (counter != 0) throw Error("Wanted but not dispatched OutEvent")
 }
 
 object Implyer
 object Dispatched
 
-fun dispatching(block: () -> Unit): Implyer {
-    block()
-    return Implyer
+infix fun <T> InEvent<T>.dispatchedWith(data: T): Implyer = runBlocking {
+    dispatch(data)
+    Implyer
 }
 
-infix fun <T> InEvent<T>.dispatchedWith(data: T): Implyer {
-    this.dispatch(data)
-    return Implyer
+infix fun InEventU.implies(block: TestBinder.() -> Unit) = runBlocking {
+    dispatch().also { testBind(block) }
 }
 
-infix fun InEventU.implies(block: TestBinder.() -> Unit) = dispatch().also { testBind(block) }
-
-infix fun Implyer.implies(block: TestBinder.() -> Unit) = testBind(block)
+infix fun Implyer.implies(block: TestBinder.() -> Unit) = runBlocking { testBind(block) }
 
 

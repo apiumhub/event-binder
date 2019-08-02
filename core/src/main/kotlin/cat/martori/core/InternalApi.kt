@@ -9,15 +9,18 @@ import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-internal val scope = CoroutineScope(Dispatchers.Default + Job())
+internal val internalScope = CoroutineScope(Dispatchers.Default + Job())
 
-internal val internalBinder = InternalBinder(scope)
+internal val internalBinder = InternalBinder()
 
-internal class InEventInternal<T>(val func: (T) -> Unit) : InEvent<T> {
-    override fun dispatch(value: T) = func(value)
+internal class InEventInternal<T>(
+    val func: suspend (T) -> Unit,
+    private val scope: CoroutineScope = internalScope
+) : InEvent<T> {
+    override suspend fun dispatch(value: T) = func(value)
 }
 
-internal class InternalBinder(private val coroutineScope: CoroutineScope) : Binder {
+internal class InternalBinder(private val coroutineScope: CoroutineScope = internalScope) : Binder {
     override fun unbind() {
         jobs.onEach { it.cancel() }.removeAll { !it.isActive }
     }
@@ -43,7 +46,7 @@ internal class InternalBinder(private val coroutineScope: CoroutineScope) : Bind
     }
 
     private fun <T> OutEvent<T>.flow() = (this as OutEventInternal<T>).flow
-    private fun <T> InEvent<T>.func(data: T) = (this as InEventInternal<T>).func(data)
+    private suspend fun <T> InEvent<T>.func(data: T) = (this as InEventInternal<T>).func(data)
 }
 
 internal class OutEventInternal<T>(private val scope: CoroutineScope) : OutEvent<T> {
