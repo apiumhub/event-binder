@@ -14,4 +14,4 @@ fun bind(coroutineScope: ScopeBinder? = null, bindBlock: Binder.() -> Unit): Bin
 fun <T> ScopeBinder.outEvent(): OutEvent<T> = OutEventInternal(this)
 
 fun <T> ScopeBinder.inEvent(block: suspend (T) -> Unit): InEvent<T> =
-    InEventInternal(block, this)
+    InEventInternal(block)
