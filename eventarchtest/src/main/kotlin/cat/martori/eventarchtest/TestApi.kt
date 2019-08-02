@@ -31,18 +31,18 @@ fun CoroutineScope.testBind(block: TestBinder.() -> Unit) {
     if (counter != 0) throw Error("Wanted but not dispatched OutEvent")
 }
 
-object Implyer
+object Implies
 object Dispatched
 
-infix fun <T> InEvent<T>.dispatchedWith(data: T): Implyer = runBlocking {
+infix fun <T> InEvent<T>.dispatchedWith(data: T): Implies = runBlocking {
     dispatch(data)
-    Implyer
+    Implies
 }
 
 infix fun InEventU.implies(block: TestBinder.() -> Unit) = runBlocking {
     dispatch().also { testBind(block) }
 }
 
-infix fun Implyer.implies(block: TestBinder.() -> Unit) = runBlocking { testBind(block) }
+infix fun Implies.implies(block: TestBinder.() -> Unit) = runBlocking { testBind(block) }
 
 

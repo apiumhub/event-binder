@@ -13,10 +13,7 @@ internal val internalScope = CoroutineScope(Dispatchers.Default + Job())
 
 internal val internalBinder = InternalBinder()
 
-internal class InEventInternal<T>(
-    val func: suspend (T) -> Unit,
-    private val scope: CoroutineScope = internalScope
-) : InEvent<T> {
+internal class InEventInternal<T>(val func: suspend (T) -> Unit) : InEvent<T> {
     override suspend fun dispatch(value: T) = func(value)
 }
 
