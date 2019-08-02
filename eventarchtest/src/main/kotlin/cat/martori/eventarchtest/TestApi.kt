@@ -53,15 +53,31 @@ infix fun InEventU.implies(block: TestBinder.() -> Unit) = runBlocking {
 infix fun Implies.implies(block: TestBinder.() -> Unit) = runBlocking { testBind(block) }
 
 
-object BindTestRule : TestRule {
-    override fun apply(base: Statement?, description: Description?): Statement {
+object BindAllTestsRule : TestRule {
+    override fun apply(base: Statement, description: Description?): Statement {
         return object : Statement() {
             override fun evaluate() {
                 Dispatchers.setMain(TestCoroutineDispatcher())
-                base?.evaluate()
+                base.evaluate()
                 Dispatchers.resetMain()
             }
         }
     }
 }
+
+object BindMarkedTestsRule : TestRule {
+    override fun apply(base: Statement, description: Description?): Statement {
+        val enabled = description
+            ?.annotations
+            ?.filterIsInstance<Bind>()
+            ?.isNotEmpty()
+            ?: false
+
+        return if (enabled) BindAllTestsRule.apply(base, description) else base
+    }
+}
+
+annotation class Bind
+
+
 

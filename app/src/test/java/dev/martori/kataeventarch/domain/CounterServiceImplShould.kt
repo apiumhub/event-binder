@@ -1,7 +1,7 @@
 package dev.martori.kataeventarch.domain
 
 import cat.martori.core.Bindable
-import cat.martori.eventarchtest.BindTestRule
+import cat.martori.eventarchtest.BindAllTestsRule
 import cat.martori.eventarchtest.dispatchedWith
 import cat.martori.eventarchtest.implies
 import org.junit.Assert.assertEquals
@@ -13,7 +13,7 @@ class CounterServiceImplShould : Bindable {
     private val sut = CounterServiceImpl()
 
     @get:Rule
-    val bindRule = BindTestRule
+    val bindRule = BindAllTestsRule
 
     @Test
     fun `test example`() {
