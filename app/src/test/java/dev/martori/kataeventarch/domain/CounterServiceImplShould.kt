@@ -1,23 +1,19 @@
 package dev.martori.kataeventarch.domain
 
 import cat.martori.core.Bindable
+import cat.martori.eventarchtest.BindTestRule
 import cat.martori.eventarchtest.dispatchedWith
 import cat.martori.eventarchtest.implies
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.setMain
 import org.junit.Assert.assertEquals
-import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 class CounterServiceImplShould : Bindable {
 
     private val sut = CounterServiceImpl()
 
-    @Before
-    fun setUp() {
-        Dispatchers.setMain(TestCoroutineDispatcher())
-    }
+    @get:Rule
+    val bindRule = BindTestRule
 
     @Test
     fun `test example`() {
@@ -34,4 +30,5 @@ class CounterServiceImplShould : Bindable {
 //        }
 
     }
+
 }

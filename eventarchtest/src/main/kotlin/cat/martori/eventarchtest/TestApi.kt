@@ -2,7 +2,14 @@ package cat.martori.eventarchtest
 
 import cat.martori.core.*
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
+import org.junit.rules.TestRule
+import org.junit.runner.Description
+import org.junit.runners.model.Statement
 
 
 private var counter = 0
@@ -45,4 +52,16 @@ infix fun InEventU.implies(block: TestBinder.() -> Unit) = runBlocking {
 
 infix fun Implies.implies(block: TestBinder.() -> Unit) = runBlocking { testBind(block) }
 
+
+object BindTestRule : TestRule {
+    override fun apply(base: Statement?, description: Description?): Statement {
+        return object : Statement() {
+            override fun evaluate() {
+                Dispatchers.setMain(TestCoroutineDispatcher())
+                base?.evaluate()
+                Dispatchers.resetMain()
+            }
+        }
+    }
+}
 
