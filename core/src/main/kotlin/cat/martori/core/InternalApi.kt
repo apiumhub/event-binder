@@ -50,7 +50,7 @@ internal class OutEventInternal<T>(private val scope: CoroutineScope) : OutEvent
     val flow get() = channel.asFlow()
 
     private val channel =
-        BroadcastChannel<T>(CONFLATED) //TODO look into closing this when appropriate
+        BroadcastChannel<T>(CONFLATED)
 
     override fun invoke(data: T) {
         scope.launch(Dispatchers.Main) {

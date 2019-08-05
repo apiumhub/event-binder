@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity(), MainView {
 
     init {
         lifecycleScope.launchWhenCreated {
-
             bindMainViewMainService(this@MainActivity, get())
             bindMainViewCounterService(this@MainActivity, get())
         }
