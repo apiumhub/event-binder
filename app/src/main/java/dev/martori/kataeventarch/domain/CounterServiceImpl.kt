@@ -7,8 +7,8 @@ import cat.martori.core.outEvent
 import dev.martori.kataeventarch.binding.CounterService
 import kotlinx.coroutines.delay
 
-class CounterServiceImpl : CounterService {
-    private val repository = Repository()
+class CounterServiceImpl(private val repository: CounterRepository = InMemoryCounterRepository()) :
+    CounterService {
 
     override val totalCount: OutEvent<Int> = outEvent()
     override val modifyCounter: InEventU = inEvent {
@@ -17,9 +17,13 @@ class CounterServiceImpl : CounterService {
 
 }
 
-class Repository {
+interface CounterRepository {
+    suspend fun getNewCount(): Int
+}
+
+class InMemoryCounterRepository : CounterRepository {
     private var counter = 0
-    suspend fun getNewCount(): Int {
+    override suspend fun getNewCount(): Int {
         delay(200)
         return ++counter
     }
