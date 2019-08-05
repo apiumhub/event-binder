@@ -1,1 +1,1 @@
-include ':app', ':eventarch', ':eventarchtest', ':core'
+include ':app', ':android', ':test', ':core'
