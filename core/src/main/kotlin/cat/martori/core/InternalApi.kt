@@ -6,6 +6,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -47,7 +48,7 @@ internal class InternalBinder(private val coroutineScope: CoroutineScope = inter
 }
 
 internal class OutEventInternal<T>(private val scope: CoroutineScope) : OutEvent<T> {
-    val flow get() = channel.asFlow()
+    val flow get() = channel.asFlow().buffer()
 
     private val channel =
         BroadcastChannel<T>(CONFLATED)

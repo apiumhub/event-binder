@@ -50,7 +50,7 @@ fun CoroutineScope.testBind(block: TestBinder.() -> Unit) {
     val testB = object : TestBinder, ScopeBinder by this, Binder by binded {}
     testB.block()
     binded.unbind()
-    if (counter != 0) throw Error("Wanted but not dispatched OutEvent")
+    if (counter != 0) throw Error("There were $counter wanted but not dispatched OutEvent")
 }
 
 object Implies
