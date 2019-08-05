@@ -2,8 +2,9 @@ package dev.martori.kataeventarch.domain
 
 import cat.martori.core.Bindable
 import cat.martori.eventarchtest.BindAllTestsRule
-import cat.martori.eventarchtest.dispatchedWith
-import cat.martori.eventarchtest.implies
+import cat.martori.eventarchtest.Parameter
+import cat.martori.eventarchtest.shouldDispatch
+import cat.martori.eventarchtest.withParameter
 import io.mockk.coEvery
 import io.mockk.mockk
 import org.junit.Assert.assertEquals
@@ -28,15 +29,19 @@ class CounterServiceImplShould : Bindable {
 
     @Test
     fun `test example`() {
-        sut.modifyCounter implies {
-            sut.totalCount dispatchedWith { assertEquals(3, it) }
+        sut.modifyCounter shouldDispatch {
+            sut.totalCount assertOverParameter { assertEquals(3, it) }
         }
 
-        sut.modifyCounter dispatchedWith (Unit) implies {
-            sut.totalCount dispatchedWith { assertEquals(3, it) }
+        sut.modifyCounter withParameter Unit shouldDispatch {
+            sut.totalCount withAny Parameter
         }
 
-//        sut.modifyCounter implies {
+        sut.modifyCounter shouldDispatch {
+            sut.totalCount withParameter 3
+        }
+
+//        sut.modifyCounter shouldDispatch {
 //            sut.totalCount never Dispatched
 //        }
 

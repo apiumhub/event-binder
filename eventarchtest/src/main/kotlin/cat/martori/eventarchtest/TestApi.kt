@@ -16,11 +16,26 @@ private var counter = 0
 
 interface TestBinder : Binder, ScopeBinder {
 
-    infix fun <T> OutEvent<T>.dispatchedWith(block: (T) -> Unit) {
+    infix fun <T> OutEvent<T>.assertOverParameter(block: (T) -> Unit) {
         counter++
         this via inEvent<T> {
             counter--
             block(it)
+        }
+    }
+
+    infix fun <T> OutEvent<T>.withParameter(param: T) {
+        counter++
+        this via inEvent<T> {
+            counter--
+            assert(it == param)
+        }
+    }
+
+    infix fun <T> OutEvent<T>.withAny(param: Parameter) {
+        counter++
+        this via inEvent<T> {
+            counter--
         }
     }
 
@@ -40,17 +55,18 @@ fun CoroutineScope.testBind(block: TestBinder.() -> Unit) {
 
 object Implies
 object Dispatched
+object Parameter
 
-infix fun <T> InEvent<T>.dispatchedWith(data: T): Implies = runBlocking {
+infix fun <T> InEvent<T>.withParameter(data: T): Implies = runBlocking {
     dispatch(data)
     Implies
 }
 
-infix fun InEventU.implies(block: TestBinder.() -> Unit) = runBlocking {
+infix fun InEventU.shouldDispatch(block: TestBinder.() -> Unit) = runBlocking {
     dispatch().also { testBind(block) }
 }
 
-infix fun Implies.implies(block: TestBinder.() -> Unit) = runBlocking { testBind(block) }
+infix fun Implies.shouldDispatch(block: TestBinder.() -> Unit) = runBlocking { testBind(block) }
 
 
 object BindAllTestsRule : TestRule {
