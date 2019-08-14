@@ -24,8 +24,8 @@ android {
 
 }
 
-ext.coroutinesVersion = "1.3.0-M1"
-ext.androidLifecycle = "2.2.0-alpha02"
+ext.coroutinesVersion = "1.3.0-RC2"
+ext.androidLifecycle = "2.2.0-alpha03"
 
 dependencies {
     api project(path: ':core')
