@@ -11,7 +11,7 @@ ext.koin_version = '2.0.1'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "dev.martori.kataeventarch"
+        applicationId "dev.martori.events.sample"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
