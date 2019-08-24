@@ -27,8 +27,9 @@ android {
 }
 
 dependencies {
-    implementation project(path: ':android')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation "dev.martori:events-android:1.0.0"
 
     implementation "org.jetbrains.kotlin:kotlin-script-runtime:$kotlin_version"
 
@@ -48,6 +49,8 @@ dependencies {
     testImplementation "io.mockk:mockk:1.9.2"
     testImplementation 'junit:junit:4.12'
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+    testImplementation "dev.martori:events-test:1.0.0"
+
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
