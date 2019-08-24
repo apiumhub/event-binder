@@ -41,7 +41,7 @@ subprojects {
                 publications {
                     maven(MavenPublication) {
                         groupId = "dev.martori"
-                        artifactId = "events-$project.name"
+                        artifactId = "$rootProject.name-$project.name"
                         version = "1.0.0"
 
                         if (project.plugins.hasPlugin("java")) {
