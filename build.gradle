@@ -22,6 +22,9 @@ plugins {
 }
 
 allprojects {
+    group = "dev.martori"
+    version = "1.0.0"
+
     repositories {
         google()
         jcenter()
@@ -40,10 +43,7 @@ subprojects {
             publishing {
                 publications {
                     maven(MavenPublication) {
-                        groupId = "dev.martori"
                         artifactId = "$rootProject.name-$project.name"
-                        version = "1.0.0"
-
                         if (project.plugins.hasPlugin("java")) {
                             from components.java
                         } else if (project.plugins.hasPlugin("android-library")) {
