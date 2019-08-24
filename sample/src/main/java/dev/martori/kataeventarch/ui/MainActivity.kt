@@ -43,3 +43,36 @@ class MainActivity : AppCompatActivity(), MainView {
         const val RIGHT = 2
     }
 }
+
+interface Destination {
+    val name: String
+}
+
+sealed class LoginDestination(override val name: String) : Destination {
+    object Register : LoginDestination("Register")
+    object Login : LoginDestination("Login")
+}
+
+sealed class MainDestination(override val name: String) : Destination {
+    object Main : MainDestination("Main")
+}
+
+
+interface Navigator<T : Destination> {
+    fun navigate(destination: T)
+}
+
+interface LoginNavigator : Navigator<LoginDestination>
+interface MainNavigator : Navigator<MainDestination>
+
+class AndroidLoginNavigator : LoginNavigator {
+    override fun navigate(destination: LoginDestination) = when (destination) {
+        LoginDestination.Register -> TODO()
+        LoginDestination.Login -> TODO()
+    }
+}
+
+fun main() {
+    val login = AndroidLoginNavigator()
+    login.navigate(LoginDestination.Login)
+}
