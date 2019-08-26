@@ -1,8 +1,11 @@
 package dev.martori.events.sample.domain
 
 import dev.martori.events.core.Bindable
+import dev.martori.events.core.dispatch
+import dev.martori.events.coroutines.inEvent
 import dev.martori.events.test.Parameter
 import dev.martori.events.test.shouldDispatch
+import dev.martori.events.test.testBind
 import dev.martori.events.test.withParameter
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -41,5 +44,14 @@ class CounterServiceImplShould : Bindable {
 //        }
 
     }
+
+    @Test
+    fun `test example 2`() = testBind {
+        sut.modifyCounter.dispatch()
+        sut.totalCount via inEvent<Int> {
+            assertEquals(3, it)
+        }
+    }
+
 
 }

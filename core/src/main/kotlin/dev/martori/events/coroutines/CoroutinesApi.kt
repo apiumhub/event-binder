@@ -6,8 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 typealias CoBindable = CoroutineScope
 
 @JvmName("extBind")
-fun CoBindable.bind(bindBlock: Binder.() -> Unit): Binder =
-    bind(this, bindBlock)
+fun CoBindable.bind(bindBlock: Binder.() -> Unit): Binder = bind(this, bindBlock)
 
 fun bind(coroutineScope: CoBindable? = null, bindBlock: Binder.() -> Unit): Binder =
     coroutineScope?.binder?.apply(bindBlock) ?: GlobalBind.bind(bindBlock)
