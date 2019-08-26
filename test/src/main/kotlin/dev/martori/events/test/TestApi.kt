@@ -1,22 +1,15 @@
 package dev.martori.events.test
 
 import dev.martori.events.core.*
-import dev.martori.events.coroutines.ScopeBinder
+import dev.martori.events.coroutines.CoBindable
 import dev.martori.events.coroutines.bind
 import dev.martori.events.coroutines.inEvent
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runBlockingTest
-import kotlinx.coroutines.test.setMain
-import org.junit.rules.TestRule
-import org.junit.runner.Description
-import org.junit.runners.model.Statement
 
 
 private var counter = 0
 
-interface TestBinder : Binder, ScopeBinder {
+interface TestBinder : Binder, CoBindable {
 
     infix fun <T> OutEvent<T>.assertOverParameter(block: (T) -> Unit) {
         counter++
@@ -47,9 +40,9 @@ interface TestBinder : Binder, ScopeBinder {
 }
 
 
-private fun testBind(block: TestBinder.() -> Unit) = runBlockingTest {
+fun testBind(block: TestBinder.() -> Unit) = runBlockingTest {
     val binded = bind { }
-    val testB = object : TestBinder, ScopeBinder by this, Binder by binded {}
+    val testB = object : TestBinder, CoBindable by this, Binder by binded {}
     testB.block()
     binded.unbind()
     if (counter != 0) throw Error("There were $counter wanted but not dispatched OutEvent")
@@ -65,33 +58,6 @@ infix fun InEventU.shouldDispatch(block: TestBinder.() -> Unit) = dispatch().als
 
 
 infix fun Implies.shouldDispatch(block: TestBinder.() -> Unit) = testBind(block)
-
-
-object BindAllTestsRule : TestRule {
-    override fun apply(base: Statement, description: Description?): Statement {
-        return object : Statement() {
-            override fun evaluate() {
-                Dispatchers.setMain(TestCoroutineDispatcher())
-                base.evaluate()
-                Dispatchers.resetMain()
-            }
-        }
-    }
-}
-
-object BindMarkedTestsRule : TestRule {
-    override fun apply(base: Statement, description: Description?): Statement {
-        val enabled = description
-            ?.annotations
-            ?.filterIsInstance<Bind>()
-            ?.isNotEmpty()
-            ?: false
-
-        return if (enabled) BindAllTestsRule.apply(base, description) else base
-    }
-}
-
-annotation class Bind
 
 
 

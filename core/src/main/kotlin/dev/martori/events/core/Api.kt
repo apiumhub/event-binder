@@ -1,6 +1,9 @@
 package dev.martori.events.core
 
 interface Bindable
+
+object GlobalBind : Bindable
+
 interface InEvent<T> {
     fun dispatch(value: T)
 }
@@ -30,4 +33,4 @@ fun <T> Bindable.outEvent(): OutEvent<T> =
 
 fun <T> Bindable.inEvent(block: (T) -> Unit): InEvent<T> = InEventInternal(block)
 
-fun bind(bindBlock: Binder.() -> Unit): Binder = internalBinder.apply { bindBlock() }
+fun Bindable.bind(bindBlock: Binder.() -> Unit): Binder = internalBinder.apply { bindBlock() }

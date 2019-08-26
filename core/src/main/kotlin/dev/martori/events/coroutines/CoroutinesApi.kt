@@ -3,15 +3,15 @@ package dev.martori.events.coroutines
 import dev.martori.events.core.*
 import kotlinx.coroutines.CoroutineScope
 
-typealias ScopeBinder = CoroutineScope
+typealias CoBindable = CoroutineScope
 
 @JvmName("extBind")
-fun ScopeBinder.bind(bindBlock: Binder.() -> Unit): Binder =
+fun CoBindable.bind(bindBlock: Binder.() -> Unit): Binder =
     bind(this, bindBlock)
 
-fun bind(coroutineScope: ScopeBinder? = null, bindBlock: Binder.() -> Unit): Binder =
-    coroutineScope?.binder?.apply(bindBlock) ?: bind(bindBlock)
+fun bind(coroutineScope: CoBindable? = null, bindBlock: Binder.() -> Unit): Binder =
+    coroutineScope?.binder?.apply(bindBlock) ?: GlobalBind.bind(bindBlock)
 
-fun <T> ScopeBinder.outEvent(): OutEvent<T> = OutEventInternal()
+fun <T> CoBindable.outEvent(): OutEvent<T> = OutEventInternal()
 
-fun <T> ScopeBinder.inEvent(block: (T) -> Unit): InEvent<T> = InEventInternal(block)
+fun <T> CoBindable.inEvent(block: (T) -> Unit): InEvent<T> = InEventInternal(block)
