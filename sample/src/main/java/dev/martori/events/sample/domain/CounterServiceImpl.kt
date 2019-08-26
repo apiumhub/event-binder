@@ -11,8 +11,6 @@ class CounterServiceImpl(private val repository: CounterRepository = InMemoryCou
 
     override val totalCount: OutEvent<Int> = outEvent()
     override val modifyCounter: InEventU = coInEvent {
-        println(coroutineContext)
-        //this delay actually breaks the test because it is using the default dispatcher, we need a way to pass the dispatcher through the test
         delay(1000)
         totalCount(repository.getNewCount())
     }

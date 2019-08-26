@@ -1,8 +1,6 @@
 package dev.martori.events.core
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.flow.asFlow
@@ -15,7 +13,13 @@ internal val internalScope = CoroutineScope(Dispatchers.Default + Job())
 internal val internalBinder = InternalBinder()
 
 internal open class InEventInternal<T>(val func: (T) -> Unit) : InEvent<T> {
-    override fun dispatch(value: T) = func(value)
+    override suspend fun dispatch(value: T) = func(value)
+}
+
+internal class CoInEventInternal<T>(private val block: suspend CoroutineScope.(T) -> Unit, scope: CoroutineScope = internalScope) : InEventInternal<T>({ scope.launch { block(it) } }) {
+    override suspend fun dispatch(value: T) {
+        coroutineScope { block(value) }
+    }
 }
 
 internal class InternalBinder(private val coroutineScope: CoroutineScope = internalScope) : Binder {

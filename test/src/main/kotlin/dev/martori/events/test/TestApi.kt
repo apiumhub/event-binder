@@ -55,7 +55,7 @@ object Implies
 object Dispatched
 object Parameter
 
-infix fun <T> InEvent<T>.withParameter(data: T) = dispatch(data).let { Implies }
+infix fun <T> InEvent<T>.withParameter(data: T) = runBlockingTest { dispatch(data) }.let { Implies }
 
 infix fun Implies.shouldDispatch(block: suspend TestBinder.() -> Unit) = testBind { block() }
 
