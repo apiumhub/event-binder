@@ -1,6 +1,9 @@
 package dev.martori.events.test
 
-import dev.martori.events.core.*
+import dev.martori.events.core.Binder
+import dev.martori.events.core.InEvent
+import dev.martori.events.core.InEventU
+import dev.martori.events.core.OutEvent
 import dev.martori.events.coroutines.CoBindable
 import dev.martori.events.coroutines.bind
 import dev.martori.events.coroutines.inEvent
@@ -54,10 +57,9 @@ object Parameter
 
 infix fun <T> InEvent<T>.withParameter(data: T) = dispatch(data).let { Implies }
 
-infix fun InEventU.shouldDispatch(block: suspend TestBinder.() -> Unit) = dispatch().also { testBind { block() } }
-
-
 infix fun Implies.shouldDispatch(block: suspend TestBinder.() -> Unit) = testBind { block() }
+
+infix fun InEventU.shouldDispatch(block: suspend TestBinder.() -> Unit) = withParameter(Unit) shouldDispatch block
 
 
 

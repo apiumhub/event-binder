@@ -27,13 +27,11 @@ interface Binder {
     @JvmName("viaU")
     infix fun <T> OutEvent<T>.via(inEvent: InEvent<Unit>)
 
-    infix fun <T> InEvent<T>.via(outEvent: OutEvent<T>)
+    infix fun <T> InEvent<T>.via(outEvent: OutEvent<T>) = outEvent via this
     fun unbind()
 }
 
-fun <T> Bindable.outEvent(): OutEvent<T> =
-    OutEventInternal()
-
+fun <T> Bindable.outEvent(): OutEvent<T> = OutEventInternal()
 fun <T> Bindable.inEvent(block: (T) -> Unit): InEvent<T> = InEventInternal(block)
 fun <T> Bindable.coInEvent(block: suspend CoroutineScope.(T) -> Unit): InEvent<T> = InEventInternal { internalScope.launch { block(it) } }
 

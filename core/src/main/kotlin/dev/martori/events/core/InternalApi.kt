@@ -34,15 +34,10 @@ internal class InternalBinder(private val coroutineScope: CoroutineScope = inter
     @JvmName("viaU")
     override fun <T> OutEvent<T>.via(inEvent: InEvent<Unit>) {
         jobs += flow().onEach { inEvent.func(Unit) }.launchIn(coroutineScope)
-
-    }
-
-    override fun <T> InEvent<T>.via(outEvent: OutEvent<T>) {
-        outEvent via this@via
     }
 
     private fun <T> OutEvent<T>.flow() = (this as OutEventInternal<T>).flow
-    private suspend fun <T> InEvent<T>.func(data: T) = (this as InEventInternal<T>).func(data)
+    private fun <T> InEvent<T>.func(data: T) = (this as InEventInternal<T>).func(data)
 }
 
 internal class OutEventInternal<T> : OutEvent<T> {
