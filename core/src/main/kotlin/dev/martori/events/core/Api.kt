@@ -2,11 +2,11 @@ package dev.martori.events.core
 
 interface Bindable
 interface InEvent<T> {
-    suspend fun dispatch(value: T)
+    fun dispatch(value: T)
 }
 typealias InEventU = InEvent<Unit>
 
-suspend fun InEventU.dispatch() = dispatch(Unit)
+fun InEventU.dispatch() = dispatch(Unit)
 
 interface OutEvent<T> {
     operator fun invoke(data: T)
@@ -28,7 +28,6 @@ interface Binder {
 fun <T> Bindable.outEvent(): OutEvent<T> =
     OutEventInternal()
 
-fun <T> Bindable.inEvent(block: suspend (T) -> Unit): InEvent<T> =
-    InEventInternal(block)
+fun <T> Bindable.inEvent(block: (T) -> Unit): InEvent<T> = InEventInternal(block)
 
 fun bind(bindBlock: Binder.() -> Unit): Binder = internalBinder.apply { bindBlock() }

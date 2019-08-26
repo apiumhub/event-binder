@@ -14,13 +14,12 @@ internal val internalScope = CoroutineScope(Dispatchers.Default + Job())
 
 internal val internalBinder = InternalBinder()
 
-internal class InEventInternal<T>(val func: suspend (T) -> Unit) :
-    InEvent<T> {
-    override suspend fun dispatch(value: T) = func(value)
+internal class InEventInternal<T>(val func: (T) -> Unit) : InEvent<T> {
+    override fun dispatch(value: T) = func(value)
 }
 
-internal class InternalBinder(private val coroutineScope: CoroutineScope = internalScope) :
-    Binder {
+internal class InternalBinder(private val coroutineScope: CoroutineScope = internalScope) : Binder {
+
     override fun unbind() {
         jobs.onEach { it.cancel() }.removeAll { !it.isActive }
     }
@@ -49,8 +48,8 @@ internal class InternalBinder(private val coroutineScope: CoroutineScope = inter
     private suspend fun <T> InEvent<T>.func(data: T) = (this as InEventInternal<T>).func(data)
 }
 
-internal class OutEventInternal<T> :
-    OutEvent<T> {
+internal class OutEventInternal<T> : OutEvent<T> {
+
     val flow get() = channel.asFlow().buffer()
 
     private val channel = BroadcastChannel<T>(CONFLATED)

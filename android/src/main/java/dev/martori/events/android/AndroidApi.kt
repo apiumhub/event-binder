@@ -13,7 +13,7 @@ typealias ViewBinder = LifecycleOwner
 
 
 fun <T> ViewBinder.outEvent(): OutEvent<T> = lifecycleScope.outEvent()
-fun <T> ViewBinder.inEvent(block: suspend (T) -> Unit): InEvent<T> = lifecycleScope.inEvent(block)
+fun <T> ViewBinder.inEvent(block: (T) -> Unit): InEvent<T> = lifecycleScope.inEvent(block)
 
 @JvmName("extBind")
 fun ViewBinder.bind(bindBlock: Binder.() -> Unit) =

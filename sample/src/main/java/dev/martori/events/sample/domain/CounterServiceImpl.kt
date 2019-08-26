@@ -5,14 +5,17 @@ import dev.martori.events.core.OutEvent
 import dev.martori.events.core.inEvent
 import dev.martori.events.core.outEvent
 import dev.martori.events.sample.binding.CounterService
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-class CounterServiceImpl(private val repository: CounterRepository = InMemoryCounterRepository()) :
-    CounterService {
+class CounterServiceImpl(private val repository: CounterRepository = InMemoryCounterRepository()) : CounterService {
 
     override val totalCount: OutEvent<Int> = outEvent()
     override val modifyCounter: InEventU = inEvent {
-        totalCount(repository.getNewCount())
+        GlobalScope.launch {
+            totalCount(repository.getNewCount())
+        }
     }
 
 }
