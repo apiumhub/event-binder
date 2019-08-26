@@ -3,6 +3,8 @@ package dev.martori.events.sample.domain
 import dev.martori.events.core.Bindable
 import dev.martori.events.test.BindAllTestsRule
 import dev.martori.events.test.Parameter
+import dev.martori.events.test.shouldDispatch
+import dev.martori.events.test.withParameter
 import io.mockk.coEvery
 import io.mockk.mockk
 import org.junit.Assert.assertEquals

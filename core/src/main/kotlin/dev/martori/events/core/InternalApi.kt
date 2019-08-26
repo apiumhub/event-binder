@@ -29,7 +29,7 @@ internal class InternalBinder(private val coroutineScope: CoroutineScope = inter
 
     override fun <T> OutEvent<T>.via(inEvent: InEvent<T>) {
         jobs += coroutineScope.launch(Dispatchers.Main) {
-            this@via.flow().collect { inEvent.func(it) }
+            flow().collect { inEvent.func(it) }
         }
     }
 
@@ -37,7 +37,7 @@ internal class InternalBinder(private val coroutineScope: CoroutineScope = inter
     @JvmName("viaU")
     override fun <T> OutEvent<T>.via(inEvent: InEvent<Unit>) {
         jobs += coroutineScope.launch(Dispatchers.Main) {
-            this@via.flow().collect { inEvent.func(Unit) }
+            flow().collect { inEvent.func(Unit) }
         }
     }
 
@@ -49,17 +49,14 @@ internal class InternalBinder(private val coroutineScope: CoroutineScope = inter
     private suspend fun <T> InEvent<T>.func(data: T) = (this as InEventInternal<T>).func(data)
 }
 
-internal class OutEventInternal<T>(private val scope: CoroutineScope) :
+internal class OutEventInternal<T> :
     OutEvent<T> {
     val flow get() = channel.asFlow().buffer()
 
-    private val channel =
-        BroadcastChannel<T>(CONFLATED)
+    private val channel = BroadcastChannel<T>(CONFLATED)
 
     override fun invoke(data: T) {
-        scope.launch(Dispatchers.Main) {
-            channel.send(data)
-        }
+        channel.offer(data)
     }
 
 }

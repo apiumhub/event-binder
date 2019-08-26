@@ -1,8 +1,5 @@
 package dev.martori.events.core
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-
 interface Bindable
 interface InEvent<T> {
     suspend fun dispatch(value: T)
@@ -29,7 +26,7 @@ interface Binder {
 }
 
 fun <T> Bindable.outEvent(): OutEvent<T> =
-    OutEventInternal(CoroutineScope(Dispatchers.Default))
+    OutEventInternal()
 
 fun <T> Bindable.inEvent(block: suspend (T) -> Unit): InEvent<T> =
     InEventInternal(block)
