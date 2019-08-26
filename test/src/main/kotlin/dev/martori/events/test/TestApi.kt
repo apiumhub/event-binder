@@ -40,7 +40,7 @@ interface TestBinder : Binder, CoBindable {
 }
 
 
-fun testBind(block: TestBinder.() -> Unit) = runBlockingTest {
+fun testBind(block: suspend TestBinder.() -> Unit) = runBlockingTest {
     val binded = bind { }
     val testB = object : TestBinder, CoBindable by this, Binder by binded {}
     testB.block()
@@ -54,10 +54,10 @@ object Parameter
 
 infix fun <T> InEvent<T>.withParameter(data: T) = dispatch(data).let { Implies }
 
-infix fun InEventU.shouldDispatch(block: TestBinder.() -> Unit) = dispatch().also { testBind(block) }
+infix fun InEventU.shouldDispatch(block: suspend TestBinder.() -> Unit) = dispatch().also { testBind { block() } }
 
 
-infix fun Implies.shouldDispatch(block: TestBinder.() -> Unit) = testBind(block)
+infix fun Implies.shouldDispatch(block: suspend TestBinder.() -> Unit) = testBind { block() }
 
 
 

@@ -15,7 +15,6 @@ class CounterServiceImplShould : Bindable {
     private val repo = mockk<CounterRepository>()
     private val sut = CounterServiceImpl(repo)
 
-
     @Before
     fun setUp() {
         coEvery {
