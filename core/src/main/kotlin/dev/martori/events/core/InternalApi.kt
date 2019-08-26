@@ -27,7 +27,7 @@ internal class InternalBinder(private val coroutineScope: CoroutineScope = inter
     private val jobs = mutableListOf<Job>()
 
     override fun <T> OutEvent<T>.via(inEvent: InEvent<T>) {
-        jobs += coroutineScope.launch(Dispatchers.Main) {
+        jobs += coroutineScope.launch {
             flow().collect { inEvent.func(it) }
         }
     }
@@ -35,7 +35,7 @@ internal class InternalBinder(private val coroutineScope: CoroutineScope = inter
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("viaU")
     override fun <T> OutEvent<T>.via(inEvent: InEvent<Unit>) {
-        jobs += coroutineScope.launch(Dispatchers.Main) {
+        jobs += coroutineScope.launch {
             flow().collect { inEvent.func(Unit) }
         }
     }

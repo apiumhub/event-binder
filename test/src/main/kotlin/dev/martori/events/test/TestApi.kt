@@ -2,12 +2,12 @@ package dev.martori.events.test
 
 import dev.martori.events.core.*
 import dev.martori.events.coroutines.ScopeBinder
+import dev.martori.events.coroutines.bind
 import dev.martori.events.coroutines.inEvent
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
 import org.junit.rules.TestRule
 import org.junit.runner.Description
@@ -47,7 +47,7 @@ interface TestBinder : Binder, ScopeBinder {
 }
 
 
-fun CoroutineScope.testBind(block: TestBinder.() -> Unit) {
+private fun testBind(block: TestBinder.() -> Unit) = runBlockingTest {
     val binded = bind { }
     val testB = object : TestBinder, ScopeBinder by this, Binder by binded {}
     testB.block()
@@ -59,16 +59,12 @@ object Implies
 object Dispatched
 object Parameter
 
-infix fun <T> InEvent<T>.withParameter(data: T): Implies = runBlocking {
-    dispatch(data)
-    Implies
-}
+infix fun <T> InEvent<T>.withParameter(data: T) = dispatch(data).let { Implies }
 
-infix fun InEventU.shouldDispatch(block: TestBinder.() -> Unit) = runBlocking {
-    dispatch().also { testBind(block) }
-}
+infix fun InEventU.shouldDispatch(block: TestBinder.() -> Unit) = dispatch().also { testBind(block) }
 
-infix fun Implies.shouldDispatch(block: TestBinder.() -> Unit) = runBlocking { testBind(block) }
+
+infix fun Implies.shouldDispatch(block: TestBinder.() -> Unit) = testBind(block)
 
 
 object BindAllTestsRule : TestRule {
