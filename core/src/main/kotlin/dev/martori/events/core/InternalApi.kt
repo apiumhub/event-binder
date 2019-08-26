@@ -7,8 +7,8 @@ import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.buffer
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 internal val internalScope = CoroutineScope(Dispatchers.Default + Job())
 
@@ -17,11 +17,6 @@ internal val internalBinder = InternalBinder()
 internal open class InEventInternal<T>(val func: (T) -> Unit) : InEvent<T> {
     override fun dispatch(value: T) = func(value)
 }
-
-internal class CoInEventInternal<T>(
-    coroutineScope: CoroutineScope = internalScope,
-    coFunc: suspend CoroutineScope.(T) -> Unit
-) : InEventInternal<T>(func = { coroutineScope.launch { coFunc(it) } })
 
 internal class InternalBinder(private val coroutineScope: CoroutineScope = internalScope) : Binder {
 
@@ -32,19 +27,14 @@ internal class InternalBinder(private val coroutineScope: CoroutineScope = inter
     private val jobs = mutableListOf<Job>()
 
     override fun <T> OutEvent<T>.via(inEvent: InEvent<T>) {
-        jobs += coroutineScope.launch {
-            println(coroutineContext)
-            flow().collect { inEvent.func(it) }
-        }
+        jobs += flow().onEach { inEvent.func(it) }.launchIn(coroutineScope)
     }
 
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("viaU")
     override fun <T> OutEvent<T>.via(inEvent: InEvent<Unit>) {
-        jobs += coroutineScope.launch {
-            println(coroutineContext)
-            flow().collect { inEvent.func(Unit) }
-        }
+        jobs += flow().onEach { inEvent.func(Unit) }.launchIn(coroutineScope)
+
     }
 
     override fun <T> InEvent<T>.via(outEvent: OutEvent<T>) {

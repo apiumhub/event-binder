@@ -2,6 +2,7 @@ package dev.martori.events.coroutines
 
 import dev.martori.events.core.*
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 typealias CoBindable = CoroutineScope
 
@@ -15,4 +16,4 @@ fun bind(coroutineScope: CoBindable? = null, bindBlock: Binder.() -> Unit): Bind
 fun <T> CoBindable.outEvent(): OutEvent<T> = OutEventInternal()
 
 fun <T> CoBindable.inEvent(block: (T) -> Unit): InEvent<T> = InEventInternal(block)
-fun <T> CoBindable.coInEvent(block: suspend CoroutineScope.(T) -> Unit): InEvent<T> = CoInEventInternal(this, block)
+fun <T> CoBindable.coInEvent(block: suspend CoroutineScope.(T) -> Unit): InEvent<T> = InEventInternal { launch { block(it) } }
