@@ -33,9 +33,7 @@ internal class InternalBinder(private val coroutineScope: CoroutineScope = inter
         jobs += flow().onEach { inEvent.func(it) }.launchIn(coroutineScope)
     }
 
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("viaU")
-    override fun <T> OutEvent<T>.via(inEvent: InEvent<Unit>) {
+    override fun <T> OutEvent<T>.viaU(inEvent: InEvent<Unit>) {
         jobs += flow().onEach { inEvent.func(Unit) }.launchIn(coroutineScope)
     }
 

@@ -13,5 +13,5 @@ fun ViewBindable.bindMainViewMainService(view: LibTestView, service: MainService
 
 fun ViewBindable.bindMainViewCounterService(view: LibTestView, service: CounterService) = bind {
     service.totalCount via view.showCounter
-    view.clickButton via service.modifyCounter
+    view.clickButton viaU service.modifyCounter
 }
