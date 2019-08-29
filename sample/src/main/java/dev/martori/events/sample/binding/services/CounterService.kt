@@ -1,4 +1,4 @@
-package dev.martori.events.sample.binding
+package dev.martori.events.sample.binding.services
 
 import dev.martori.events.core.Bindable
 import dev.martori.events.core.InEventU

@@ -1,10 +1,10 @@
-package dev.martori.events.sample.domain
+package dev.martori.events.sample.domain.services
 
 import dev.martori.events.core.InEvent
 import dev.martori.events.core.OutEvent
 import dev.martori.events.core.inEvent
 import dev.martori.events.core.outEvent
-import dev.martori.events.sample.binding.MainService
+import dev.martori.events.sample.binding.services.MainService
 import dev.martori.events.sample.ui.MainActivity.Companion.LEFT
 import dev.martori.events.sample.ui.MainActivity.Companion.RIGHT
 import kotlinx.coroutines.CoroutineScope

@@ -1,10 +1,10 @@
 package dev.martori.events.sample
 
 import android.app.Application
-import dev.martori.events.sample.binding.CounterService
-import dev.martori.events.sample.binding.MainService
-import dev.martori.events.sample.domain.CounterServiceImpl
-import dev.martori.events.sample.domain.MainDelayService
+import dev.martori.events.sample.binding.services.CounterService
+import dev.martori.events.sample.binding.services.MainService
+import dev.martori.events.sample.domain.services.DelayedCounterService
+import dev.martori.events.sample.domain.services.MainDelayService
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
@@ -22,5 +22,5 @@ class App : Application() {
 
 private val mainModule = module {
     single<MainService> { MainDelayService() }
-    single<CounterService> { CounterServiceImpl() }
+    single<CounterService> { DelayedCounterService() }
 }

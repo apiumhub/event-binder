@@ -3,6 +3,8 @@ package dev.martori.events.sample.domain
 import dev.martori.events.core.Bindable
 import dev.martori.events.core.dispatch
 import dev.martori.events.coroutines.inEvent
+import dev.martori.events.sample.domain.repositories.CounterRepository
+import dev.martori.events.sample.domain.services.DelayedCounterService
 import dev.martori.events.test.Parameter
 import dev.martori.events.test.shouldDispatch
 import dev.martori.events.test.testBind
@@ -16,7 +18,7 @@ import org.junit.Test
 class CounterServiceImplShould : Bindable {
 
     private val repo = mockk<CounterRepository>()
-    private val sut = CounterServiceImpl(repo)
+    private val sut = DelayedCounterService(repo)
 
     @Before
     fun setUp() {

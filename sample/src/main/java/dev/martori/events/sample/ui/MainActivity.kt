@@ -8,9 +8,9 @@ import dev.martori.events.android.outEvent
 import dev.martori.events.core.InEvent
 import dev.martori.events.core.OutEvent
 import dev.martori.events.sample.R
-import dev.martori.events.sample.binding.MainView
-import dev.martori.events.sample.binding.bindMainViewCounterService
-import dev.martori.events.sample.binding.bindMainViewMainService
+import dev.martori.events.sample.binding.views.MainView
+import dev.martori.events.sample.binding.views.bindMainViewCounterService
+import dev.martori.events.sample.binding.views.bindMainViewMainService
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.get
 
