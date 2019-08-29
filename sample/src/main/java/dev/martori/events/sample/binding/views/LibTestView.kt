@@ -4,7 +4,7 @@ import dev.martori.events.core.InEvent
 import dev.martori.events.core.OutEvent
 
 
-interface MainView {
+interface LibTestView {
     val clickButton: OutEvent<Int>
     val showText: InEvent<String>
     val showCounter: InEvent<Int>

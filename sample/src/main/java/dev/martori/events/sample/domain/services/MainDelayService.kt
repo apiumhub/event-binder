@@ -5,8 +5,8 @@ import dev.martori.events.core.OutEvent
 import dev.martori.events.core.inEvent
 import dev.martori.events.core.outEvent
 import dev.martori.events.sample.binding.services.MainService
-import dev.martori.events.sample.ui.MainFragment.Companion.LEFT
-import dev.martori.events.sample.ui.MainFragment.Companion.RIGHT
+import dev.martori.events.sample.ui.LibTestFragment.Companion.LEFT
+import dev.martori.events.sample.ui.LibTestFragment.Companion.RIGHT
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
