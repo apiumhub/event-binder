@@ -6,7 +6,7 @@ import kotlinx.coroutines.delay
 class InMemoryCounterRepository : CounterRepository {
     private var counter = 0
     override suspend fun getNewCount(): Int {
-        delay(1000)
+        delay(3000)
         return ++counter
     }
 }

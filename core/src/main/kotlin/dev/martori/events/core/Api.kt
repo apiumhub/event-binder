@@ -27,6 +27,7 @@ interface Binder {
 
     infix fun <T> InEvent<T>.via(outEvent: OutEvent<T>) = outEvent via this
     fun unbind()
+    var resumed: Boolean
 }
 
 fun <T> Bindable.outEvent(): OutEvent<T> = OutEventInternal()
