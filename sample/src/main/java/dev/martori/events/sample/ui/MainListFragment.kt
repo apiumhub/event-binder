@@ -21,12 +21,21 @@ class MainListFragment : Fragment(R.layout.fragment_main_list), MainListView {
 
     override val openDetails: OutEvent<Int> = outEvent()
 
+    private val currentId: Int?
+        get() = idInputText.text.toString().toIntOrNull()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         openDetailsButton.setOnClickListener {
-            idInputText.text.toString().toIntOrNull()?.let { id ->
-                openDetails(id)
-            }
+            openDetailsWithId()
         }
+        idInputText.setOnEditorActionListener { _, actionId, _ ->
+            openDetailsWithId()
+            true
+        }
+    }
+
+    private fun openDetailsWithId() {
+        currentId?.let { openDetails(it) }
     }
 }
