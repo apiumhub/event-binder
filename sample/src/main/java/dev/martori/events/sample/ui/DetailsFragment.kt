@@ -16,11 +16,14 @@ import kotlinx.android.synthetic.main.fragment_details.*
 import org.koin.android.ext.android.get
 
 class DetailsFragment : Fragment(R.layout.fragment_details), DetailView {
+    private val detailsId
+        get() = arguments?.getInt("id") ?: throw IllegalStateException("MissingArgument")
+
     init {
         whenCreated {
             bindDetailsNavigation(this@DetailsFragment, get())
             bindDetailsService(this@DetailsFragment, get())
-            loadDetails(arguments?.getInt("id") ?: throw IllegalStateException("MissingArgument"))
+            loadDetails(detailsId)
         }
     }
 
