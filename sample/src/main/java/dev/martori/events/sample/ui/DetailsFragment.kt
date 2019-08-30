@@ -3,7 +3,6 @@ package dev.martori.events.sample.ui
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import dev.martori.events.android.outEvent
 import dev.martori.events.core.OutEventU
 import dev.martori.events.core.invoke
@@ -15,7 +14,7 @@ import org.koin.android.ext.android.get
 
 class DetailsFragment : Fragment(R.layout.fragment_details), DetailView {
     init {
-        lifecycleScope.launchWhenCreated {
+        whenCreated {
             bindDetailsNavigation(this@DetailsFragment, get())
         }
     }

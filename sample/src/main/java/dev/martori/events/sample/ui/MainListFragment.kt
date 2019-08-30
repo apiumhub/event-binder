@@ -3,7 +3,6 @@ package dev.martori.events.sample.ui
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import dev.martori.events.android.outEvent
 import dev.martori.events.core.OutEvent
 import dev.martori.events.sample.R
@@ -15,7 +14,7 @@ import org.koin.android.ext.android.get
 class MainListFragment : Fragment(R.layout.fragment_main_list), MainListView {
 
     init {
-        lifecycleScope.launchWhenCreated {
+        whenCreated {
             bindListNavigation(this@MainListFragment, get())
         }
     }

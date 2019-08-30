@@ -16,7 +16,7 @@ interface TestBinder : Binder, CoBindable {
 
     infix fun <T> OutEvent<T>.assertOverParameter(block: (T) -> Unit) {
         counter++
-        this via inEvent<T> {
+        this via inEvent {
             counter--
             block(it)
         }
@@ -24,7 +24,7 @@ interface TestBinder : Binder, CoBindable {
 
     infix fun <T> OutEvent<T>.withParameter(param: T) {
         counter++
-        this via inEvent<T> {
+        this via inEvent {
             counter--
             assert(it == param)
         }
@@ -32,13 +32,13 @@ interface TestBinder : Binder, CoBindable {
 
     infix fun <T> OutEvent<T>.withAny(param: Parameter) {
         counter++
-        this via inEvent<T> {
+        this via inEvent {
             counter--
         }
     }
 
     infix fun <T> OutEvent<T>.never(dispatched: Dispatched) {
-        this via inEvent<T> { throw Error("Dispatched an OutEvent that should not be dispatched") }
+        this via inEvent { throw Error("Dispatched an OutEvent that should not be dispatched") }
     }
 }
 
