@@ -6,8 +6,6 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
-ext.koin_version = '2.0.1'
-
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompile).all {
     kotlinOptions.freeCompilerArgs += ["-XXLanguage:+InlineClasses"]
 }
@@ -22,6 +20,12 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    packagingOptions {
+        pickFirst 'META-INF/kotlinx-io.kotlin_module'
+        pickFirst 'META-INF/atomicfu.kotlin_module'
+        pickFirst 'META-INF/kotlinx-coroutines-io.kotlin_module'
+        pickFirst 'META-INF/kotlinx-coroutines-core.kotlin_module'
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -30,7 +34,9 @@ android {
     }
 }
 
+ext.koin_version = "2.0.1"
 ext.nav_version = "2.2.0-alpha01"
+ext.ktor_version = "1.2.3"
 
 dependencies {
     implementation (project(":android"))
@@ -45,6 +51,8 @@ dependencies {
 
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-androidx-scope:$koin_version"
+
+    implementation "io.ktor:ktor-client-android:$ktor_version"
 
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$androidLifecycle"
     implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
