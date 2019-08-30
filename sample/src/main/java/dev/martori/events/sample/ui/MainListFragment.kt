@@ -29,7 +29,7 @@ class MainListFragment : Fragment(R.layout.fragment_main_list), MainListView {
         openDetailsButton.setOnClickListener {
             openDetailsWithId()
         }
-        idInputText.setOnEditorActionListener { _, actionId, _ ->
+        idInputText.setOnEditorActionListener { _, _, _ ->
             openDetailsWithId()
             true
         }
