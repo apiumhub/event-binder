@@ -20,4 +20,14 @@ class InMemoryDetailsServiceTest {
             sut.modelLoaded withParameter expected
         }
     }
+
+    @Test
+    fun `loading details should dispatch error if id is negative`() {
+        val id = -1
+
+        sut.loadDetails withParameter id shouldDispatch {
+            sut.startProcess withAny Parameter
+            sut.error withAny Parameter
+        }
+    }
 }

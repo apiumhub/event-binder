@@ -12,7 +12,8 @@ class InMemoryDetailsService : DetailsService {
     override val loadDetails: InEvent<Int> = coInEvent {
         startProcess()
         delay(1500)
-        modelLoaded(DetailViewModel(it, "I'm $it"))
+        if (it >= 0) modelLoaded(DetailViewModel(it, "I'm $it"))
+        else error(Error("Negative ID"))
     }
     override val error: OutEvent<Error> = outEvent()
     override val startProcess: OutEventU = outEvent()
