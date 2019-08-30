@@ -23,6 +23,10 @@ class MainListFragment : Fragment(R.layout.fragment_main_list), MainListView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        openDetailsButton.setOnClickListener { openDetails(0) }
+        openDetailsButton.setOnClickListener {
+            idInputText.text.toString().toIntOrNull()?.let { id ->
+                openDetails(id)
+            }
+        }
     }
 }
