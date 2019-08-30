@@ -2,7 +2,9 @@ package dev.martori.events.sample
 
 import android.app.Application
 import dev.martori.events.sample.binding.services.CounterService
+import dev.martori.events.sample.binding.services.DetailsService
 import dev.martori.events.sample.binding.services.MainService
+import dev.martori.events.sample.data.inmemory.InMemoryDetailsService
 import dev.martori.events.sample.domain.services.DelayedCounterService
 import dev.martori.events.sample.domain.services.MainDelayService
 import org.koin.android.ext.koin.androidContext
@@ -23,4 +25,5 @@ class App : Application() {
 private val mainModule = module {
     single<MainService> { MainDelayService() }
     single<CounterService> { DelayedCounterService() }
+    single<DetailsService> { InMemoryDetailsService() }
 }
