@@ -1,4 +1,4 @@
-package dev.martori.events.sample.data.inmemory
+package dev.martori.events.sample.domain.services
 
 import dev.martori.events.sample.binding.views.DetailViewModel
 import dev.martori.events.test.Dispatched
