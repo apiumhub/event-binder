@@ -24,10 +24,15 @@ class LibTestFragment : Fragment(R.layout.fragment_lib_test), LibTestView {
         tvCount.text = "clicked: $it"
     }
 
+    init {
+        whenCreated {
+            bindMainViewMainService(this@LibTestFragment, get())
+            bindMainViewCounterService(this@LibTestFragment, get())
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        bindMainViewMainService(this@LibTestFragment, get())
-        bindMainViewCounterService(this@LibTestFragment, get())
         btnLeft.setOnClickListener { clickButton(LEFT) }
         btnRight.setOnClickListener { clickButton(RIGHT) }
     }

@@ -22,4 +22,9 @@
             android:name="id"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/libTestFragment"
+        android:name="dev.martori.events.sample.ui.LibTestFragment"
+        android:label="fragment_lib_test"
+        tools:layout="@layout/fragment_lib_test" />
 </navigation>

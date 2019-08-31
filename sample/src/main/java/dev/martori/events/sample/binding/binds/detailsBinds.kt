@@ -6,8 +6,6 @@ import dev.martori.events.sample.binding.services.DetailsService
 import dev.martori.events.sample.binding.views.DetailView
 
 fun ViewBindable.bindDetailsService(view: DetailView, service: DetailsService) = bind {
-    view.renderError via service.error
-    view.renderLoading via service.startProcess
-    view.renderModel via service.modelLoaded
+    view.renderState via service.sendState
     view.loadDetails via service.loadDetails
 }
