@@ -1,7 +1,5 @@
 package dev.martori.events.sample.ui
 
-import android.os.Bundle
-import android.view.View
 import androidx.fragment.app.Fragment
 import dev.martori.events.android.outEvent
 import dev.martori.events.core.OutEvent
@@ -13,27 +11,23 @@ import org.koin.android.ext.android.get
 
 class MainListFragment : Fragment(R.layout.fragment_main_list), MainListView {
 
+    private val currentId: Int?
+        get() = idInputText.text.toString().toIntOrNull()
+
     init {
         whenCreated {
             bindListNavigation(this@MainListFragment, get())
+            openDetailsButton.setOnClickListener {
+                openDetailsWithId()
+            }
+            idInputText.setOnEditorActionListener { _, _, _ ->
+                openDetailsWithId()
+                true
+            }
         }
     }
 
     override val openDetails: OutEvent<Int> = outEvent()
-
-    private val currentId: Int?
-        get() = idInputText.text.toString().toIntOrNull()
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        openDetailsButton.setOnClickListener {
-            openDetailsWithId()
-        }
-        idInputText.setOnEditorActionListener { _, _, _ ->
-            openDetailsWithId()
-            true
-        }
-    }
 
     private fun openDetailsWithId() {
         currentId?.let { openDetails(it) }
