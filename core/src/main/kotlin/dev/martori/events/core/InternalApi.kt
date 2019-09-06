@@ -2,11 +2,9 @@ package dev.martori.events.core
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 
 internal val internalScope = CoroutineScope(Dispatchers.Default + Job())
 
@@ -44,14 +42,29 @@ internal class InternalBinder(private val coroutineScope: CoroutineScope = inter
     private fun <T> InEvent<T>.func(data: T) = (this as InEventInternal<T>).func(data)
 }
 
-internal class OutEventInternal<T> : OutEvent<T> {
-
-    val flow get() = channel.asFlow()
-
-    private val channel = BroadcastChannel<T>(CONFLATED)
+internal class OutEventInternalJustOnce<T> : OutEvent<T> {
+    private val channel = Channel<T>(CONFLATED)
+    val flow get() = channel.consumeAsFlow()
 
     override fun invoke(data: T) {
         channel.offer(data)
     }
+}
 
+internal class OutEventInternalNoLastElement<T> : OutEvent<T> {
+    private val channel = BroadcastChannel<T>(1)
+    val flow = channel.asFlow()
+
+    override fun invoke(data: T) {
+        channel.offer(data)
+    }
+}
+
+internal class OutEventInternal<T> : OutEvent<T> {
+    private val channel = BroadcastChannel<T>(CONFLATED)
+    val flow = channel.asFlow()
+
+    override fun invoke(data: T) {
+        channel.offer(data)
+    }
 }
