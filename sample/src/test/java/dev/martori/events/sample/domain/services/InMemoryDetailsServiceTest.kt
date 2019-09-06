@@ -1,8 +1,7 @@
 package dev.martori.events.sample.domain.services
 
+import dev.martori.events.sample.binding.views.AsyncView
 import dev.martori.events.sample.binding.views.DetailViewModel
-import dev.martori.events.test.Dispatched
-import dev.martori.events.test.Parameter
 import dev.martori.events.test.shouldDispatch
 import dev.martori.events.test.withParameter
 import org.junit.Test
@@ -17,9 +16,11 @@ class InMemoryDetailsServiceTest {
         val expected = DetailViewModel(id, "I'm $id")
 
         sut.loadDetails withParameter id shouldDispatch {
-            sut.startProcess withAny Parameter
-            sut.modelLoaded withParameter expected
-            sut.error never Dispatched
+            //            sut.sendState assertOverParameter { assert(it is AsyncView.Loading) }
+            sut.sendState assertOverParameter {
+                it as AsyncView.Success
+                assert(it.model.id == id)
+            }
         }
     }
 
@@ -28,8 +29,8 @@ class InMemoryDetailsServiceTest {
         val id = -1
 
         sut.loadDetails withParameter id shouldDispatch {
-            sut.startProcess withAny Parameter
-            sut.error withAny Parameter
+            //            sut.sendState assertOverParameter { assert(it is AsyncView.Loading) }
+            sut.sendState assertOverParameter { assert(it is AsyncView.Error) }
         }
     }
 }
