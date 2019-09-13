@@ -11,7 +11,7 @@ fun CoBindable.bind(bindBlock: Binder.() -> Unit): Binder = bind(this, bindBlock
 fun bind(coroutineScope: CoBindable? = null, bindBlock: Binder.() -> Unit): Binder =
     coroutineScope?.binder?.apply(bindBlock) ?: GlobalBind.bind(bindBlock)
 
-fun <T> CoBindable.outEvent(): OutEvent<T> = OutEventInternal()
-
+fun <T> CoBindable.outEvent(retainValue: Boolean = true): OutEvent<T> = OutEventInternal(retainValue)
+fun <T> CoBindable.singleTimeOutEvent(): OutEvent<T> = SingleTimeOutEventInternal()
 fun <T> CoBindable.inEvent(block: (T) -> Unit): InEvent<T> = InEventInternal(block)
 fun <T> CoBindable.coInEvent(block: suspend CoroutineScope.(T) -> Unit): InEvent<T> = CoInEventInternal(block, this)

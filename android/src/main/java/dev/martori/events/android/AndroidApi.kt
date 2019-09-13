@@ -3,15 +3,13 @@ package dev.martori.events.android
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import dev.martori.events.core.*
-import dev.martori.events.coroutines.bind
-import dev.martori.events.coroutines.coInEvent
-import dev.martori.events.coroutines.inEvent
-import dev.martori.events.coroutines.outEvent
+import dev.martori.events.coroutines.*
 import kotlinx.coroutines.CoroutineScope
 
 typealias ViewBindable = LifecycleOwner
 
-fun <T> ViewBindable.outEvent(): OutEvent<T> = lifecycleScope.outEvent()
+fun <T> ViewBindable.outEvent(retainValue: Boolean = true): OutEvent<T> = lifecycleScope.outEvent(retainValue)
+fun <T> ViewBindable.singleTimeOutEvent(): OutEvent<T> = lifecycleScope.singleTimeOutEvent()
 fun <T> ViewBindable.inEvent(block: (T) -> Unit): InEvent<T> = lifecycleScope.inEvent(block)
 fun <T> ViewBindable.coInEvent(block: suspend CoroutineScope.(T) -> Unit): InEvent<T> = lifecycleScope.coInEvent(block)
 

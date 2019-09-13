@@ -30,7 +30,8 @@ interface Binder {
     var resumed: Boolean
 }
 
-fun <T> Bindable.outEvent(): OutEvent<T> = OutEventInternal()
+fun <T> Bindable.outEvent(retainValue: Boolean = true): OutEvent<T> = OutEventInternal(retainValue)
+fun <T> Bindable.singleTimeOutEvent(): OutEvent<T> = SingleTimeOutEventInternal()
 fun <T> Bindable.inEvent(block: (T) -> Unit): InEvent<T> = InEventInternal(block)
 fun <T> Bindable.coInEvent(block: suspend CoroutineScope.(T) -> Unit): InEvent<T> = CoInEventInternal(block)
 
