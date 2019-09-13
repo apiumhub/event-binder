@@ -42,7 +42,7 @@ internal class InternalBinder(private val coroutineScope: CoroutineScope = inter
     private fun <T> InEvent<T>.func(data: T) = (this as InEventInternal<T>).func(data)
 }
 
-internal class OutEventInternalJustOnce<T> : OutEvent<T> {
+internal class SingleTimeOutEventInternal<T> : OutEvent<T> {
     private val channel = Channel<T>(CONFLATED)
     val flow get() = channel.consumeAsFlow()
 
@@ -51,17 +51,8 @@ internal class OutEventInternalJustOnce<T> : OutEvent<T> {
     }
 }
 
-internal class OutEventInternalNoLastElement<T> : OutEvent<T> {
-    private val channel = BroadcastChannel<T>(1)
-    val flow = channel.asFlow()
-
-    override fun invoke(data: T) {
-        channel.offer(data)
-    }
-}
-
-internal class OutEventInternal<T> : OutEvent<T> {
-    private val channel = BroadcastChannel<T>(CONFLATED)
+internal class OutEventInternal<T>(retainValue: Boolean = true) : OutEvent<T> {
+    private val channel = BroadcastChannel<T>(if (retainValue) CONFLATED else 1)
     val flow = channel.asFlow()
 
     override fun invoke(data: T) {
