@@ -29,8 +29,13 @@ class InMemoryDetailsServiceTest {
         val id = -1
 
         sut.loadDetails withParameter id shouldDispatch {
-            //            sut.sendState assertOverParameter { assert(it is AsyncView.Loading) }
-            sut.sendState assertOverParameter { assert(it is AsyncView.Error) }
+            sut.sendState assertOverParameter {}
+            sut.sendState assertOverParameter {
+                assert(it is AsyncView.Loading) { "wasn't loading" }
+            }
+            sut.sendState assertOverParameter {
+                assert(it is AsyncView.Error) { "wasn't error" }
+            }
         }
     }
 }

@@ -10,19 +10,36 @@ import dev.martori.events.coroutines.inEvent
 import kotlinx.coroutines.test.runBlockingTest
 
 
-private var counter = 0
-
 interface TestBinder : Binder, CoBindable {
+    infix fun <T> OutEvent<T>.assertOverParameter(block: (T) -> Unit)
+    infix fun <T> OutEvent<T>.withParameter(param: T)
+    infix fun <T> OutEvent<T>.withAny(param: Parameter)
+    infix fun <T> OutEvent<T>.never(dispatched: Dispatched)
+}
 
-    infix fun <T> OutEvent<T>.assertOverParameter(block: (T) -> Unit) {
+typealias Assertion<T> = (T) -> Unit
+
+class TestBinderInternal(scope: CoBindable, binder: Binder) : TestBinder, Binder by binder, CoBindable by scope {
+
+    private val assertions = mutableMapOf<OutEvent<*>, List<Assertion<*>>>()
+    var counter = 0
+
+    override fun <T> OutEvent<T>.via(inEvent: InEvent<T>) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override infix fun <T> OutEvent<T>.assertOverParameter(block: (T) -> Unit) {
         counter++
+        val list = assertions.getOrPut(this) { mutableListOf<Assertion<T>>() } as? MutableList<Assertion<T>>
+        list?.add(block)
         this via inEvent {
+            list?.get(0)?.invoke(it)
+            list?.removeAt(0)
             counter--
-            block(it)
         }
     }
 
-    infix fun <T> OutEvent<T>.withParameter(param: T) {
+    override infix fun <T> OutEvent<T>.withParameter(param: T) {
         counter++
         this via inEvent {
             counter--
@@ -30,34 +47,36 @@ interface TestBinder : Binder, CoBindable {
         }
     }
 
-    infix fun <T> OutEvent<T>.withAny(param: Parameter) {
+    override infix fun <T> OutEvent<T>.withAny(param: Parameter) {
         counter++
         this via inEvent {
             counter--
         }
     }
 
-    infix fun <T> OutEvent<T>.never(dispatched: Dispatched) {
+    override infix fun <T> OutEvent<T>.never(dispatched: Dispatched) {
         this via inEvent { throw Error("Dispatched an OutEvent that should not be dispatched") }
     }
 }
 
 
-fun testBind(block: suspend TestBinder.() -> Unit) = runBlockingTest {
-    val binded = bind { }
-    val testB = object : TestBinder, CoBindable by this, Binder by binded {}
+fun testBind(block: suspend TestBinder.() -> Unit) = testBind({}, block)
+
+private fun testBind(dispatch: suspend () -> Unit, block: suspend TestBinder.() -> Unit) = runBlockingTest {
+    val testB = TestBinderInternal(this, bind { })
     testB.block()
-    binded.unbind()
-    if (counter != 0) throw Error("There were $counter wanted but not dispatched OutEvent")
+    dispatch()
+    testB.unbind()
+    if (testB.counter != 0) throw Error("There were ${testB.counter} wanted but not dispatched OutEvent")
 }
 
-object Implies
+class Implies(val dispatch: suspend () -> Unit)
 object Dispatched
 object Parameter
 
-infix fun <T> InEvent<T>.withParameter(data: T) = runBlockingTest { dispatch(data) }.let { Implies }
+infix fun <T> InEvent<T>.withParameter(data: T) = Implies { dispatch(data) }
 
-infix fun Implies.shouldDispatch(block: suspend TestBinder.() -> Unit) = testBind { block() }
+infix fun Implies.shouldDispatch(block: suspend TestBinder.() -> Unit) = testBind(dispatch, block)
 
 infix fun InEventU.shouldDispatch(block: suspend TestBinder.() -> Unit) = withParameter(Unit) shouldDispatch block
 
