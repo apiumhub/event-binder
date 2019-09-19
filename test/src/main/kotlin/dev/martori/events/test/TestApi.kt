@@ -19,14 +19,10 @@ interface TestBinder : Binder, CoBindable {
 
 typealias Assertion<T> = (T) -> Unit
 
-class TestBinderInternal(scope: CoBindable, binder: Binder) : TestBinder, Binder by binder, CoBindable by scope {
+internal class TestBinderInternal(scope: CoBindable, binder: Binder) : TestBinder, Binder by binder, CoBindable by scope {
 
     private val assertions = mutableMapOf<OutEvent<*>, List<Assertion<*>>>()
     var counter = 0
-
-    override fun <T> OutEvent<T>.via(inEvent: InEvent<T>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     override infix fun <T> OutEvent<T>.assertOverParameter(block: (T) -> Unit) {
         counter++
