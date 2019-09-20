@@ -7,6 +7,7 @@ import dev.martori.events.core.OutEvent
 import dev.martori.events.coroutines.CoBindable
 import dev.martori.events.coroutines.bind
 import dev.martori.events.coroutines.inEvent
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runBlockingTest
 
 
@@ -21,23 +22,32 @@ typealias Assertion<T> = (T) -> Unit
 
 internal class TestBinderInternal(scope: CoBindable, binder: Binder) : TestBinder, Binder by binder, CoBindable by scope {
 
-    private val assertions = mutableMapOf<OutEvent<*>, List<Assertion<*>>>()
+    val assertions = mutableMapOf<OutEvent<*>, List<Assertion<*>>>()
     var counter = 0
 
     override infix fun <T> OutEvent<T>.assertOverParameter(block: (T) -> Unit) {
         counter++
-        val list = assertions.getOrPut(this) { mutableListOf<Assertion<T>>() } as? MutableList<Assertion<T>>
-        list?.add(block)
-        this via inEvent {
-            list?.get(0)?.invoke(it)
-            list?.removeAt(0)
+        getEventAssertions()?.add {
             counter--
+            block(it)
         }
     }
 
+    fun runAssertions() {
+        assertions.forEach { (out, list) ->
+            var index = 0
+            out via inEvent {
+                list.getOrElse(index) { {} }(it)
+                index++
+            }
+        }
+    }
+
+    fun <T> OutEvent<T>.getEventAssertions() = assertions.getOrPut(this) { mutableListOf<Assertion<T>>() } as? MutableList<Assertion<T>>
+
     override infix fun <T> OutEvent<T>.withParameter(param: T) {
         counter++
-        this via inEvent {
+        getEventAssertions()?.add {
             counter--
             assert(it == param)
         }
@@ -45,7 +55,7 @@ internal class TestBinderInternal(scope: CoBindable, binder: Binder) : TestBinde
 
     override infix fun <T> OutEvent<T>.withAny(param: Parameter) {
         counter++
-        this via inEvent {
+        getEventAssertions()?.add {
             counter--
         }
     }
@@ -59,11 +69,14 @@ internal class TestBinderInternal(scope: CoBindable, binder: Binder) : TestBinde
 fun testBind(block: suspend TestBinder.() -> Unit) = testBind({}, block)
 
 private fun testBind(dispatch: suspend () -> Unit, block: suspend TestBinder.() -> Unit) = runBlockingTest {
-    val testB = TestBinderInternal(this, bind { })
-    testB.block()
-    dispatch()
-    testB.unbind()
-    if (testB.counter != 0) throw Error("There were ${testB.counter} wanted but not dispatched OutEvent")
+    launch {
+        val testB = TestBinderInternal(this, bind { })
+        testB.block()
+        testB.runAssertions()
+        dispatch()
+        testB.unbind()
+        assert(testB.counter == 0) { "There were ${testB.counter} wanted but not dispatched OutEvent" }
+    }
 }
 
 class Implies(val dispatch: suspend () -> Unit)
