@@ -44,9 +44,29 @@ subprojects {
                     maven(MavenPublication) {
                         artifactId = "$rootProject.name-$project.name"
                         if (project.plugins.hasPlugin("java")) {
+                            task jvmSourcesJar(type: Jar) {
+                                archiveClassifier.set("sources")
+                                from sourceSets.main.allSource
+                            }
                             from components.java
+                            artifact jvmSourcesJar
                         } else if (project.plugins.hasPlugin("android-library")) {
+                            task androidSourcesJar(type: Jar) {
+                                archiveClassifier.set("sources")
+                                from android.sourceSets.main.java.srcDirs
+                            }
                             from components.android
+                            artifact androidSourcesJar
+                        }
+                    }
+                }
+                repositories {
+                    maven {
+                        name 'NexusApiumSNAPSHOT'
+                        url snapshotsRepositoryUrl
+                        credentials {
+                            username = deployRepoUsername
+                            password = deployRepoPassword
                         }
                     }
                 }
