@@ -37,24 +37,28 @@ subprojects {
     apply plugin: "maven-publish"
     apply plugin: "digital.wup.android-maven-publish"
 
-    project.afterEvaluate {
-        if (!project.plugins.hasPlugin("android")) {
+    afterEvaluate {
+        if (plugins.hasPlugin("java")) {
+            task jvmSourcesJar(type: Jar) {
+                archiveClassifier.set("sources")
+                from sourceSets.main.allSource
+            }
+        }
+        if (plugins.hasPlugin("android-library")) {
+            task androidSourcesJar(type: Jar) {
+                archiveClassifier.set("sources")
+                from android.sourceSets.main.java.srcDirs
+            }
+        }
+        if (!plugins.hasPlugin("android")) {
             publishing {
                 publications {
                     maven(MavenPublication) {
                         artifactId = "$rootProject.name-$project.name"
-                        if (project.plugins.hasPlugin("java")) {
-                            task jvmSourcesJar(type: Jar) {
-                                archiveClassifier.set("sources")
-                                from sourceSets.main.allSource
-                            }
+                        if (plugins.hasPlugin("java")) {
                             from components.java
                             artifact jvmSourcesJar
-                        } else if (project.plugins.hasPlugin("android-library")) {
-                            task androidSourcesJar(type: Jar) {
-                                archiveClassifier.set("sources")
-                                from android.sourceSets.main.java.srcDirs
-                            }
+                        } else if (plugins.hasPlugin("android-library")) {
                             from components.android
                             artifact androidSourcesJar
                         }
@@ -62,7 +66,7 @@ subprojects {
                 }
                 repositories {
                     maven {
-                        name 'NexusApiumSNAPSHOT'
+                        name 'NexusSNAPSHOT'
                         url snapshotsRepositoryUrl
                         credentials {
                             username = deployRepoUsername
