@@ -38,27 +38,31 @@ subprojects {
     apply plugin: "digital.wup.android-maven-publish"
 
     afterEvaluate {
-        if (plugins.hasPlugin("java")) {
+        def isJava = plugins.hasPlugin("java")
+        def isAndroid = plugins.hasPlugin("android-library")
+        def shouldPublish = !plugins.hasPlugin("android")
+
+        if (isJava) {
             task jvmSourcesJar(type: Jar) {
                 archiveClassifier.set("sources")
                 from sourceSets.main.allSource
             }
         }
-        if (plugins.hasPlugin("android-library")) {
+        if (isAndroid) {
             task androidSourcesJar(type: Jar) {
                 archiveClassifier.set("sources")
                 from android.sourceSets.main.java.srcDirs
             }
         }
-        if (!plugins.hasPlugin("android")) {
+        if (shouldPublish) {
             publishing {
                 publications {
                     maven(MavenPublication) {
                         artifactId = "$rootProject.name-$project.name"
-                        if (plugins.hasPlugin("java")) {
+                        if (isJava) {
                             from components.java
                             artifact jvmSourcesJar
-                        } else if (plugins.hasPlugin("android-library")) {
+                        } else if (isAndroid) {
                             from components.android
                             artifact androidSourcesJar
                         }
