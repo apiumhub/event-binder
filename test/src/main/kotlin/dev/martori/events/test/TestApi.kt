@@ -11,6 +11,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.fail
 import kotlin.reflect.KClass
+import kotlin.reflect.full.callSuspend
+import kotlin.reflect.full.declaredFunctions
 
 
 interface TestBinder : Binder, CoBindable {
@@ -26,8 +28,8 @@ typealias Assertion<T> = (T) -> Unit
 
 internal class TestBinderInternal(scope: CoBindable, binder: Binder) : TestBinder, Binder by binder, CoBindable by scope {
 
-    val assertions = mutableMapOf<OutEvent<*>, List<Assertion<*>>>()
-    var counter = 0
+    private val assertions = mutableMapOf<OutEvent<*>, List<Assertion<*>>>()
+    internal var counter = 0
 
     override infix fun <T> OutEvent<T>.assertOverParameter(block: (T) -> Unit) {
         counter++
@@ -103,7 +105,9 @@ class Implies(val dispatch: suspend () -> Unit)
 object Dispatched
 object Parameter
 
-infix fun <T> InEvent<T>.withParameter(data: T) = Implies { dispatch(data) }
+infix fun <T> InEvent<T>.withParameter(data: T) = Implies {
+    this::class.declaredFunctions.find { it.name == "dispatch" }?.callSuspend(this, data)
+}
 
 infix fun Implies.shouldDispatch(block: suspend TestBinder.() -> Unit) = testBind(dispatch, block)
 

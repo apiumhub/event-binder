@@ -6,12 +6,8 @@ interface Bindable
 
 object GlobalBind : Bindable
 
-interface InEvent<T> {
-    suspend fun dispatch(value: T)
-}
+interface InEvent<T>
 typealias InEventU = InEvent<Unit>
-
-suspend fun InEventU.dispatch() = dispatch(Unit)
 
 interface OutEvent<T> {
     operator fun invoke(data: T)

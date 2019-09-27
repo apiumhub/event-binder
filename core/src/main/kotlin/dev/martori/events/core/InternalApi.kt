@@ -4,20 +4,21 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 internal val internalScope = CoroutineScope(Dispatchers.Default + Job())
 
 internal val internalBinder = InternalBinder()
 
 internal open class InEventInternal<T>(val func: (T) -> Unit) : InEvent<T> {
-    override suspend fun dispatch(value: T) = func(value)
+    open suspend fun dispatch(value: T) = func(value)
 }
 
 internal class CoInEventInternal<T>(private val block: suspend CoroutineScope.(T) -> Unit, scope: CoroutineScope = internalScope) : InEventInternal<T>({ scope.launch { block(it) } }) {
-    override suspend fun dispatch(value: T) {
-        coroutineScope { block(value) }
-    }
+    override suspend fun dispatch(value: T) = coroutineScope { block(value) }
 }
 
 internal class InternalBinder(private val coroutineScope: CoroutineScope = internalScope) : Binder {
@@ -44,7 +45,6 @@ internal class InternalBinder(private val coroutineScope: CoroutineScope = inter
 
 internal class SingleTimeOutEventInternal<T> : OutEvent<T> {
     private val channel = Channel<T>(CONFLATED)
-    val flow get() = channel.consumeAsFlow()
 
     override fun invoke(data: T) {
         channel.offer(data)
