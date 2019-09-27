@@ -87,7 +87,6 @@ internal class TestBinderInternal(scope: CoBindable, binder: Binder) : TestBinde
     }
 }
 
-
 fun testBind(block: suspend TestBinder.() -> Unit) = testBind({}, block)
 
 private fun testBind(dispatch: suspend () -> Unit, block: suspend TestBinder.() -> Unit) = runBlockingTest {

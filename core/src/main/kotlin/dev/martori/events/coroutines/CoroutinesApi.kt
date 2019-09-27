@@ -15,3 +15,5 @@ fun <T> CoBindable.outEvent(retainValue: Boolean = true): OutEvent<T> = OutEvent
 fun <T> CoBindable.singleTimeOutEvent(): OutEvent<T> = SingleTimeOutEventInternal()
 fun <T> CoBindable.inEvent(block: (T) -> Unit): InEvent<T> = InEventInternal(block)
 fun <T> CoBindable.coInEvent(block: suspend CoroutineScope.(T) -> Unit): InEvent<T> = CoInEventInternal(block, this)
+
+fun <T> Bindable.coInEvent(block: suspend CoroutineScope.(T) -> Unit): InEvent<T> = CoInEventInternal(block)

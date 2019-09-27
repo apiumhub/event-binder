@@ -1,7 +1,5 @@
 package dev.martori.events.core
 
-import kotlinx.coroutines.CoroutineScope
-
 interface Bindable
 
 object GlobalBind : Bindable
@@ -29,6 +27,5 @@ interface Binder {
 fun <T> Bindable.outEvent(retainValue: Boolean = true): OutEvent<T> = OutEventInternal(retainValue)
 fun <T> Bindable.singleTimeOutEvent(): OutEvent<T> = SingleTimeOutEventInternal()
 fun <T> Bindable.inEvent(block: (T) -> Unit): InEvent<T> = InEventInternal(block)
-fun <T> Bindable.coInEvent(block: suspend CoroutineScope.(T) -> Unit): InEvent<T> = CoInEventInternal(block)
 
 fun Bindable.bind(bindBlock: Binder.() -> Unit): Binder = internalBinder.apply { bindBlock() }
