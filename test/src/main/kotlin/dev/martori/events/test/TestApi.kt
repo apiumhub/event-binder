@@ -14,7 +14,6 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.callSuspend
 import kotlin.reflect.full.declaredFunctions
 
-
 interface TestBinder : Binder, CoBindable {
     infix fun <T> OutEvent<T>.assertOverParameter(block: (T) -> Unit)
     infix fun <T : Any> OutEvent<T?>.withTypeNullable(type: KClass<*>)
@@ -111,6 +110,3 @@ infix fun <T> InEvent<T>.withParameter(data: T) = Implies {
 infix fun Implies.shouldDispatch(block: suspend TestBinder.() -> Unit) = testBind(dispatch, block)
 
 infix fun InEventU.shouldDispatch(block: suspend TestBinder.() -> Unit) = withParameter(Unit) shouldDispatch block
-
-
-
