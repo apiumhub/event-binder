@@ -2,8 +2,8 @@ package dev.martori.events.sample.domain.services
 
 import dev.martori.events.core.InEvent
 import dev.martori.events.core.OutEvent
-import dev.martori.events.core.coInEvent
 import dev.martori.events.core.outEvent
+import dev.martori.events.coroutines.coInEvent
 import dev.martori.events.sample.binding.services.DetailsService
 import dev.martori.events.sample.binding.views.AsyncView
 import dev.martori.events.sample.binding.views.DetailViewModel

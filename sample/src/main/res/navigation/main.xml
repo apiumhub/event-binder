@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    app:startDestination="@id/libTestFragment">
+    app:startDestination="@id/list">
     <fragment
         android:id="@+id/list"
         android:name="dev.martori.events.sample.ui.MainListFragment"
