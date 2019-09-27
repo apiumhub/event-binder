@@ -15,9 +15,7 @@ class InMemoryDetailsServiceTest {
         val id = 0
         val expected = AsyncView.Success(DetailViewModel(id, "I'm $id"))
         sut.loadDetails withParameter id shouldDispatch {
-            sut.sendState assertOverParameter {
-                assert(it is AsyncView.Loading) { "wasn't loading" }
-            }
+            sut.sendState withType AsyncView.Loading::class
             sut.sendState withParameter expected
         }
     }
@@ -26,12 +24,8 @@ class InMemoryDetailsServiceTest {
     fun `loading details should dispatch error if id is negative`() {
         val id = -1
         sut.loadDetails withParameter id shouldDispatch {
-            sut.sendState assertOverParameter {
-                assert(it is AsyncView.Loading) { "wasn't loading" }
-            }
-            sut.sendState assertOverParameter {
-                assert(it is AsyncView.Error) { "wasn't error" }
-            }
+            sut.sendState withType AsyncView.Loading::class
+            sut.sendState withType AsyncView.Error::class
         }
     }
 

@@ -9,10 +9,14 @@ import dev.martori.events.coroutines.bind
 import dev.martori.events.coroutines.inEvent
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.Assert.fail
+import kotlin.reflect.KClass
 
 
 interface TestBinder : Binder, CoBindable {
     infix fun <T> OutEvent<T>.assertOverParameter(block: (T) -> Unit)
+    infix fun <T : Any> OutEvent<T?>.withTypeNullable(type: KClass<*>)
+    infix fun <T : Any> OutEvent<T>.withType(type: KClass<*>)
     infix fun <T> OutEvent<T>.withParameter(param: T)
     infix fun <T> OutEvent<T>.withAny(param: Parameter)
     infix fun <T> OutEvent<T>.never(dispatched: Dispatched)
@@ -49,7 +53,23 @@ internal class TestBinderInternal(scope: CoBindable, binder: Binder) : TestBinde
         counter++
         getEventAssertions()?.add {
             counter--
-            assert(it == param)
+            assert(it == param) { "value mismatch expected: $param but was $it" }
+        }
+    }
+
+    override fun <T : Any> OutEvent<T?>.withTypeNullable(type: KClass<*>) {
+        counter++
+        getEventAssertions()?.add { value ->
+            counter--
+            value?.let { assert(type.isInstance(it)) { "type mismatch expected: $type but was ${it::class}" } }
+        }
+    }
+
+    override fun <T : Any> OutEvent<T>.withType(type: KClass<*>) {
+        counter++
+        getEventAssertions()?.add { value ->
+            counter--
+            assert(type.isInstance(value)) { "type mismatch expected: $type but was ${value::class}" }
         }
     }
 
@@ -61,7 +81,7 @@ internal class TestBinderInternal(scope: CoBindable, binder: Binder) : TestBinde
     }
 
     override infix fun <T> OutEvent<T>.never(dispatched: Dispatched) {
-        this via inEvent { throw Error("Dispatched an OutEvent that should not be dispatched") }
+        this via inEvent { fail("Dispatched an OutEvent that should not be dispatched") }
     }
 }
 
