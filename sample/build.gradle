@@ -1,10 +1,9 @@
-apply plugin: 'com.android.application'
-
-apply plugin: 'kotlin-android'
-
-apply plugin: 'kotlin-android-extensions'
-
-apply plugin: 'kotlin-kapt'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
+}
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompile).all {
     kotlinOptions.freeCompilerArgs += ["-XXLanguage:+InlineClasses"]
@@ -39,7 +38,7 @@ ext.nav_version = '2.2.0-alpha03'
 ext.ktor_version = "1.2.3"
 
 dependencies {
-    implementation (project(":android"))
+    implementation(project(":android"))
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation "org.jetbrains.kotlin:kotlin-script-runtime:$kotlin_version"
@@ -64,7 +63,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0-alpha10'
 
     testImplementation project(path: ':test')
-    testImplementation "io.mockk:mockk:1.9.2"
+    testImplementation 'io.mockk:mockk:1.9.3'
     testImplementation 'junit:junit:4.12'
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
 }

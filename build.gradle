@@ -16,8 +16,7 @@ buildscript {
 }
 
 plugins {
-    id "maven-publish"
-    id "digital.wup.android-maven-publish" version "3.6.2"
+    id "digital.wup.android-maven-publish" version "3.6.2" apply false
 }
 
 allprojects {
