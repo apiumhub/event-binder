@@ -1,10 +1,10 @@
 package dev.martori.events.sample.binding.services
 
 import dev.martori.events.core.Bindable
-import dev.martori.events.core.InEvent
-import dev.martori.events.core.OutEvent
+import dev.martori.events.core.Consumer
+import dev.martori.events.core.Event
 
 interface MainService : Bindable {
-    val requestTextById: InEvent<Int>
-    val sendText: OutEvent<String>
+    val requestTextById: Consumer<Int>
+    val sendText: Event<String>
 }

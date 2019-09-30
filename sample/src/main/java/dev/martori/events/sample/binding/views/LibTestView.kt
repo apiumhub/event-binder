@@ -1,11 +1,11 @@
 package dev.martori.events.sample.binding.views
 
-import dev.martori.events.core.InEvent
-import dev.martori.events.core.OutEvent
+import dev.martori.events.core.Consumer
+import dev.martori.events.core.Event
 
 
 interface LibTestView {
-    val clickButton: OutEvent<Int>
-    val showText: InEvent<String>
-    val showCounter: InEvent<Int>
+    val clickButton: Event<Int>
+    val showText: Consumer<String>
+    val showCounter: Consumer<Int>
 }

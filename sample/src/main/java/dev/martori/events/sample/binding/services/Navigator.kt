@@ -1,10 +1,10 @@
 package dev.martori.events.sample.binding.services
 
 import dev.martori.events.core.Bindable
-import dev.martori.events.core.InEvent
-import dev.martori.events.core.InEventU
+import dev.martori.events.core.Consumer
+import dev.martori.events.core.ConsumerU
 
 interface Navigator : Bindable {
-    val openDetails: InEvent<Int>
-    val openList: InEventU
+    val openDetails: Consumer<Int>
+    val openList: ConsumerU
 }

@@ -4,28 +4,28 @@ interface Bindable
 
 object GlobalBind : Bindable
 
-interface InEvent<T>
-typealias InEventU = InEvent<Unit>
+interface Consumer<T>
+typealias ConsumerU = Consumer<Unit>
 
-interface OutEvent<T> {
+interface Event<T> {
     operator fun invoke(data: T)
 }
-typealias OutEventU = OutEvent<Unit>
+typealias EventU = Event<Unit>
 
-operator fun OutEventU.invoke(): Unit = invoke(Unit)
+operator fun EventU.invoke(): Unit = invoke(Unit)
 
 interface Binder {
-    infix fun <T> OutEvent<T>.via(inEvent: InEvent<T>)
+    infix fun <T> Event<T>.via(consumer: Consumer<T>)
 
-    infix fun <T> OutEvent<T>.viaU(inEvent: InEvent<Unit>)
+    infix fun <T> Event<T>.viaU(consumer: Consumer<Unit>)
 
-    infix fun <T> InEvent<T>.via(outEvent: OutEvent<T>) = outEvent via this
+    infix fun <T> Consumer<T>.via(event: Event<T>) = event via this
     fun unbind()
     var resumed: Boolean
 }
 
-fun <T> Bindable.outEvent(retainValue: Boolean = true): OutEvent<T> = OutEventInternal(retainValue)
-fun <T> Bindable.singleTimeOutEvent(): OutEvent<T> = SingleTimeOutEventInternal()
-fun <T> Bindable.inEvent(block: (T) -> Unit): InEvent<T> = InEventInternal(block)
+fun <T> Bindable.event(retainValue: Boolean = true): Event<T> = EventInternal(retainValue)
+fun <T> Bindable.singleTimeEvent(): Event<T> = SingleTimeEventInternal()
+fun <T> Bindable.consumer(block: (T) -> Unit): Consumer<T> = ConsumerInternal(block)
 
 fun Bindable.bind(bindBlock: Binder.() -> Unit): Binder = internalBinder.apply { bindBlock() }

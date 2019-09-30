@@ -3,11 +3,11 @@ package dev.martori.events.sample.ui
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import dev.martori.events.android.inEvent
-import dev.martori.events.android.outEvent
-import dev.martori.events.core.InEvent
-import dev.martori.events.core.OutEvent
-import dev.martori.events.core.OutEventU
+import dev.martori.events.android.consumer
+import dev.martori.events.android.event
+import dev.martori.events.core.Consumer
+import dev.martori.events.core.Event
+import dev.martori.events.core.EventU
 import dev.martori.events.sample.R
 import dev.martori.events.sample.binding.views.AsyncView
 import dev.martori.events.sample.binding.views.DetailView
@@ -26,9 +26,9 @@ class DetailsFragment : Fragment(R.layout.fragment_details), DetailView {
         }
     }
 
-    override val loadDetails: OutEvent<Int> = outEvent()
-    override val goBack: OutEventU = outEvent()
-    override val renderState: InEvent<AsyncView<DetailViewModel>> = inEvent {
+    override val loadDetails: Event<Int> = event()
+    override val goBack: EventU = event()
+    override val renderState: Consumer<AsyncView<DetailViewModel>> = consumer {
         when (it) {
             is AsyncView.Success -> {
                 stateTextView.text = "Name: ${it.model.name}"

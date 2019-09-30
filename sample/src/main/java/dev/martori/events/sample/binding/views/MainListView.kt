@@ -1,7 +1,7 @@
 package dev.martori.events.sample.binding.views
 
-import dev.martori.events.core.OutEvent
+import dev.martori.events.core.Event
 
 interface MainListView {
-    val openDetails: OutEvent<Int>
+    val openDetails: Event<Int>
 }

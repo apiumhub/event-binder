@@ -1,11 +1,11 @@
 package dev.martori.events.sample.binding.views
 
-import dev.martori.events.core.OutEvent
-import dev.martori.events.core.OutEventU
+import dev.martori.events.core.Event
+import dev.martori.events.core.EventU
 
 interface DetailView : AsyncModelView<DetailViewModel> {
-    val goBack: OutEventU
-    val loadDetails: OutEvent<Int>
+    val goBack: EventU
+    val loadDetails: Event<Int>
 }
 
 data class DetailViewModel(val id: Int, val name: String)

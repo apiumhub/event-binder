@@ -1,6 +1,6 @@
 package dev.martori.events.coroutines
 
-import dev.martori.events.core.InEventInternal
+import dev.martori.events.core.ConsumerInternal
 import dev.martori.events.core.InternalBinder
 import dev.martori.events.core.internalScope
 import kotlinx.coroutines.CoroutineScope
@@ -14,6 +14,6 @@ internal val CoroutineScope.binder: InternalBinder
     ).also { scopedBinders[this] = it }
 
 
-internal class CoInEventInternal<T>(private val block: suspend CoroutineScope.(T) -> Unit, scope: CoroutineScope = internalScope) : InEventInternal<T>({ scope.launch { block(it) } }) {
+internal class SuspendConsumerInternal<T>(private val block: suspend CoroutineScope.(T) -> Unit, scope: CoroutineScope = internalScope) : ConsumerInternal<T>({ scope.launch { block(it) } }) {
     override suspend fun dispatch(value: T) = coroutineScope { block(value) }
 }

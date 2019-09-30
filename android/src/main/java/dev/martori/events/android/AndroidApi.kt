@@ -8,10 +8,10 @@ import kotlinx.coroutines.CoroutineScope
 
 typealias ViewBindable = LifecycleOwner
 
-fun <T> ViewBindable.outEvent(retainValue: Boolean = true): OutEvent<T> = lifecycleScope.outEvent(retainValue)
-fun <T> ViewBindable.singleTimeOutEvent(): OutEvent<T> = lifecycleScope.singleTimeOutEvent()
-fun <T> ViewBindable.inEvent(block: (T) -> Unit): InEvent<T> = lifecycleScope.inEvent(block)
-fun <T> ViewBindable.coInEvent(block: suspend CoroutineScope.(T) -> Unit): InEvent<T> = lifecycleScope.coInEvent(block)
+fun <T> ViewBindable.event(retainValue: Boolean = true): Event<T> = lifecycleScope.event(retainValue)
+fun <T> ViewBindable.singleTimeEvent(): Event<T> = lifecycleScope.singleTimeEvent()
+fun <T> ViewBindable.consumer(block: (T) -> Unit): Consumer<T> = lifecycleScope.consumer(block)
+fun <T> ViewBindable.suspendConsumer(block: suspend CoroutineScope.(T) -> Unit): Consumer<T> = lifecycleScope.suspendConsumer(block)
 
 @JvmName("extBind")
 fun ViewBindable.bind(bindBlock: Binder.() -> Unit) =
