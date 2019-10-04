@@ -16,7 +16,9 @@ import kotlinx.android.synthetic.main.fragment_main_list.*
 class MainListFragment : Fragment(R.layout.fragment_main_list), MainListView {
     override val openDetails: Event<Int> = event()
     override val requestListElements: Event<Int> = event()
-    private val adapter = MainListAdapter()
+    private val adapter = MainListAdapter {
+        openDetails(it.id)
+    }
 
     override val showListElements: Consumer<List<ListElement>> = consumer {
         adapter.elements = it
@@ -24,9 +26,9 @@ class MainListFragment : Fragment(R.layout.fragment_main_list), MainListView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        applyBinds()
         mainList.adapter = adapter
         if (savedInstanceState == null) {
+            applyBinds()
             requestListElements(0)
         }
     }
