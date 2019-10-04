@@ -1,7 +1,5 @@
 package dev.martori.events.sample.ui
 
-import android.os.Bundle
-import android.view.View
 import androidx.fragment.app.Fragment
 import dev.martori.events.android.consumer
 import dev.martori.events.android.event
@@ -29,10 +27,8 @@ class MainListFragment : Fragment(R.layout.fragment_main_list), MainListView {
             applyBinds()
             requestListElements(0)
         }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        mainList.adapter = adapter
+        whenViewCreated {
+            mainList.adapter = adapter
+        }
     }
 }

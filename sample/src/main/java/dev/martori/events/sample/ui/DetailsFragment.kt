@@ -1,7 +1,5 @@
 package dev.martori.events.sample.ui
 
-import android.os.Bundle
-import android.view.View
 import androidx.fragment.app.Fragment
 import dev.martori.events.android.consumer
 import dev.martori.events.android.event
@@ -18,10 +16,9 @@ class DetailsFragment : Fragment(R.layout.fragment_details), DetailView {
     private val detailsId
         get() = arguments?.getInt("id") ?: throw IllegalStateException("MissingArgument")
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        applyBinds()
-        if (savedInstanceState == null) {
+    init {
+        whenCreated {
+            applyBinds()
             loadDetails(detailsId)
         }
     }

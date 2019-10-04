@@ -17,6 +17,11 @@ fun Fragment.whenCreated(block: suspend CoroutineScope.() -> Unit) {
     lifecycleScope.launchWhenCreated(block)
 }
 
+fun Fragment.whenViewCreated(block: suspend CoroutineScope.() -> Unit) {
+    viewLifecycleOwnerLiveData.observe(::getLifecycle) {
+        it.lifecycleScope.launchWhenCreated(block)
+    }
+}
 inline fun <reified T : Fragment> T.lazyBinds() = inject<Binder>(named<T>()) { parametersOf(this) }
 inline fun <reified T : Fragment> T.applyBinds() = get<Binder>(named<T>()) { parametersOf(this) }
 
