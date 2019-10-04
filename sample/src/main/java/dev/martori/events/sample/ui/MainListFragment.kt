@@ -24,12 +24,15 @@ class MainListFragment : Fragment(R.layout.fragment_main_list), MainListView {
         adapter.elements = it
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        mainList.adapter = adapter
-        if (savedInstanceState == null) {
+    init {
+        whenCreated {
             applyBinds()
             requestListElements(0)
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        mainList.adapter = adapter
     }
 }
