@@ -1,5 +1,9 @@
 package dev.martori.events.sample.ui
 
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import dev.martori.events.core.Binder
@@ -15,3 +19,5 @@ fun Fragment.whenCreated(block: suspend CoroutineScope.() -> Unit) {
 
 inline fun <reified T : Fragment> T.lazyBinds() = inject<Binder>(named<T>()) { parametersOf(this) }
 inline fun <reified T : Fragment> T.applyBinds() = get<Binder>(named<T>()) { parametersOf(this) }
+
+fun ViewGroup.inflate(@LayoutRes layoutId: Int): View = LayoutInflater.from(context).inflate(layoutId, this, false)
