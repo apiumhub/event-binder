@@ -10,8 +10,10 @@ import dev.martori.events.core.Binder
 import kotlinx.coroutines.CoroutineScope
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
+import org.koin.core.module.Module
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
+import org.koin.core.scope.Scope
 
 fun Fragment.whenCreated(block: suspend CoroutineScope.() -> Unit) {
     lifecycleScope.launchWhenCreated(block)
@@ -24,5 +26,11 @@ fun Fragment.whenViewCreated(block: suspend CoroutineScope.() -> Unit) {
 }
 inline fun <reified T : Fragment> T.lazyBinds() = inject<Binder>(named<T>()) { parametersOf(this) }
 inline fun <reified T : Fragment> T.applyBinds() = get<Binder>(named<T>()) { parametersOf(this) }
+
+inline fun <reified T> Module.koinBind(noinline block: Scope.(T) -> Unit) {
+    factory(named<T>()) { (bindable: T) ->
+        block(bindable)
+    }
+}
 
 fun ViewGroup.inflate(@LayoutRes layoutId: Int): View = LayoutInflater.from(context).inflate(layoutId, this, false)
