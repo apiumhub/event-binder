@@ -13,7 +13,7 @@ fun bind(coroutineScope: CoBindable? = null, bindBlock: Binder.() -> Unit): Bind
 
 fun <T> CoBindable.event(retainValue: Boolean = true): Event<T> = EventInternal(retainValue)
 fun <T> CoBindable.singleTimeEvent(): Event<T> = SingleTimeEventInternal()
-fun <T> CoBindable.consumer(block: (T) -> Unit): Consumer<T> = ConsumerInternal(block)
-fun <T> CoBindable.suspendConsumer(block: suspend CoroutineScope.(T) -> Unit): Consumer<T> = SuspendConsumerInternal(block, this)
+fun <T> CoBindable.receiver(block: (T) -> Unit): Receiver<T> = ReceiverInternal(block)
+fun <T> CoBindable.suspendReceiver(block: suspend CoroutineScope.(T) -> Unit): Receiver<T> = SuspendReceiverInternal(block, this)
 
-fun <T> Bindable.suspendConsumer(block: suspend CoroutineScope.(T) -> Unit): Consumer<T> = SuspendConsumerInternal(block)
+fun <T> Bindable.suspendReceiver(block: suspend CoroutineScope.(T) -> Unit): Receiver<T> = SuspendReceiverInternal(block)

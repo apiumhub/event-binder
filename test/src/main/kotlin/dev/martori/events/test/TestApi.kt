@@ -1,12 +1,12 @@
 package dev.martori.events.test
 
 import dev.martori.events.core.Binder
-import dev.martori.events.core.Consumer
-import dev.martori.events.core.ConsumerU
+import dev.martori.events.core.Receiver
+import dev.martori.events.core.ReceiverU
 import dev.martori.events.core.Event
 import dev.martori.events.coroutines.CoBindable
 import dev.martori.events.coroutines.bind
-import dev.martori.events.coroutines.consumer
+import dev.martori.events.coroutines.receiver
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.fail
@@ -41,7 +41,7 @@ internal class TestBinderInternal(scope: CoBindable, binder: Binder) : TestBinde
     fun runAssertions() {
         assertions.forEach { (out, list) ->
             var index = 0
-            out via consumer {
+            out via receiver {
                 list.getOrElse(index) { {} }(it)
                 index++
             }
@@ -82,7 +82,7 @@ internal class TestBinderInternal(scope: CoBindable, binder: Binder) : TestBinde
     }
 
     override infix fun <T> Event<T>.never(dispatched: Dispatched) {
-        this via consumer { fail("Dispatched an Event that should not be dispatched") }
+        this via receiver { fail("Dispatched an Event that should not be dispatched") }
     }
 }
 
@@ -103,10 +103,10 @@ class Implies(val dispatch: suspend () -> Unit)
 object Dispatched
 object Parameter
 
-infix fun <T> Consumer<T>.withParameter(data: T) = Implies {
+infix fun <T> Receiver<T>.withParameter(data: T) = Implies {
     this::class.declaredFunctions.find { it.name == "dispatch" }?.callSuspend(this, data)
 }
 
 infix fun Implies.shouldDispatch(block: suspend TestBinder.() -> Unit) = testBind(dispatch, block)
 
-infix fun ConsumerU.shouldDispatch(block: suspend TestBinder.() -> Unit) = withParameter(Unit) shouldDispatch block
+infix fun ReceiverU.shouldDispatch(block: suspend TestBinder.() -> Unit) = withParameter(Unit) shouldDispatch block

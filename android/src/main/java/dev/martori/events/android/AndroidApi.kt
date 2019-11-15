@@ -10,8 +10,8 @@ typealias ViewBindable = LifecycleOwner
 
 fun <T> ViewBindable.event(retainValue: Boolean = true): Event<T> = lifecycleScope.event(retainValue)
 fun <T> ViewBindable.singleTimeEvent(): Event<T> = lifecycleScope.singleTimeEvent()
-fun <T> ViewBindable.consumer(block: (T) -> Unit): Consumer<T> = lifecycleScope.consumer(block)
-fun <T> ViewBindable.suspendConsumer(block: suspend CoroutineScope.(T) -> Unit): Consumer<T> = lifecycleScope.suspendConsumer(block)
+fun <T> ViewBindable.receiver(block: (T) -> Unit): Receiver<T> = lifecycleScope.receiver(block)
+fun <T> ViewBindable.suspendReceiver(block: suspend CoroutineScope.(T) -> Unit): Receiver<T> = lifecycleScope.suspendReceiver(block)
 
 @JvmName("extBind")
 fun ViewBindable.bind(bindBlock: Binder.() -> Unit) =

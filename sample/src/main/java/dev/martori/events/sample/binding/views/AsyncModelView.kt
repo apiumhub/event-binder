@@ -1,9 +1,9 @@
 package dev.martori.events.sample.binding.views
 
-import dev.martori.events.core.Consumer
+import dev.martori.events.core.Receiver
 
 interface AsyncModelView<T> {
-    val renderState: Consumer<AsyncView<T>>
+    val renderState: Receiver<AsyncView<T>>
 }
 
 sealed class AsyncView<T> {

@@ -3,9 +3,9 @@ package dev.martori.events.sample.ui
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import dev.martori.events.android.consumer
+import dev.martori.events.android.receiver
 import dev.martori.events.android.event
-import dev.martori.events.core.Consumer
+import dev.martori.events.core.Receiver
 import dev.martori.events.core.Event
 import dev.martori.events.sample.R
 import dev.martori.events.sample.binding.binds.bindMainViewCounterService
@@ -17,10 +17,10 @@ import org.koin.android.ext.android.get
 class LibTestFragment : Fragment(R.layout.fragment_lib_test), LibTestView {
 
     override val clickButton: Event<Int> = event()
-    override val showText: Consumer<String> = consumer {
+    override val showText: Receiver<String> = receiver {
         tvMainText.text = it
     }
-    override val showCounter: Consumer<Int> = consumer {
+    override val showCounter: Receiver<Int> = receiver {
         tvCount.text = "clicked: $it"
     }
 

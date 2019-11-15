@@ -1,9 +1,9 @@
 package dev.martori.events.sample.ui
 
 import androidx.fragment.app.Fragment
-import dev.martori.events.android.consumer
+import dev.martori.events.android.receiver
 import dev.martori.events.android.event
-import dev.martori.events.core.Consumer
+import dev.martori.events.core.Receiver
 import dev.martori.events.core.Event
 import dev.martori.events.core.EventU
 import dev.martori.events.sample.R
@@ -25,7 +25,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details), DetailView {
 
     override val loadDetails: Event<Int> = event()
     override val goBack: EventU = event()
-    override val renderState: Consumer<AsyncView<DetailViewModel>> = consumer {
+    override val renderState: Receiver<AsyncView<DetailViewModel>> = receiver {
         when (it) {
             is AsyncView.Success -> {
                 stateTextView.text = "Name: ${it.model.name}"

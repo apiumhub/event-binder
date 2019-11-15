@@ -15,7 +15,7 @@ internal val internalScope = CoroutineScope(Dispatchers.Default + Job())
 
 internal val internalBinder = InternalBinder()
 
-internal open class ConsumerInternal<T>(val func: (T) -> Unit) : Consumer<T> {
+internal open class ReceiverInternal<T>(val func: (T) -> Unit) : Receiver<T> {
     open suspend fun dispatch(value: T) = func(value)
 }
 
@@ -29,16 +29,16 @@ internal class InternalBinder(private val coroutineScope: CoroutineScope = inter
 
     private val jobs = mutableListOf<Job>()
 
-    override fun <T> Event<T>.via(consumer: Consumer<T>) {
-        jobs += flow().filter { resumed }.onEach { consumer.func(it) }.launchIn(coroutineScope)
+    override fun <T> Event<T>.via(receiver: Receiver<T>) {
+        jobs += flow().filter { resumed }.onEach { receiver.func(it) }.launchIn(coroutineScope)
     }
 
-    override fun <T> Event<T>.viaU(consumer: Consumer<Unit>) {
-        jobs += flow().filter { resumed }.onEach { consumer.func(Unit) }.launchIn(coroutineScope)
+    override fun <T> Event<T>.viaU(receiver: Receiver<Unit>) {
+        jobs += flow().filter { resumed }.onEach { receiver.func(Unit) }.launchIn(coroutineScope)
     }
 
     private fun <T> Event<T>.flow() = (this as EventInternal<T>).flow
-    private fun <T> Consumer<T>.func(data: T) = (this as ConsumerInternal<T>).func(data)
+    private fun <T> Receiver<T>.func(data: T) = (this as ReceiverInternal<T>).func(data)
 }
 
 internal class SingleTimeEventInternal<T> : Event<T> {

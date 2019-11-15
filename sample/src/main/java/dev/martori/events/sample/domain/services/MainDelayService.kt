@@ -1,8 +1,8 @@
 package dev.martori.events.sample.domain.services
 
-import dev.martori.events.core.Consumer
+import dev.martori.events.core.Receiver
 import dev.martori.events.core.Event
-import dev.martori.events.core.consumer
+import dev.martori.events.core.receiver
 import dev.martori.events.core.event
 import dev.martori.events.sample.binding.services.MainService
 import dev.martori.events.sample.ui.LibTestFragment.Companion.LEFT
@@ -16,7 +16,7 @@ class MainDelayService : MainService {
 
     val scope = CoroutineScope(Dispatchers.Main)
 
-    override val requestTextById: Consumer<Int> = consumer { id ->
+    override val requestTextById: Receiver<Int> = receiver { id ->
         scope.launch {
             delay(2000)
             sendText(calculateText(id))
