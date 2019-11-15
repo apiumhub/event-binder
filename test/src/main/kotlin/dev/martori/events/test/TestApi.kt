@@ -1,9 +1,9 @@
 package dev.martori.events.test
 
 import dev.martori.events.core.Binder
+import dev.martori.events.core.Event
 import dev.martori.events.core.Receiver
 import dev.martori.events.core.ReceiverU
-import dev.martori.events.core.Event
 import dev.martori.events.coroutines.CoBindable
 import dev.martori.events.coroutines.bind
 import dev.martori.events.coroutines.receiver
@@ -32,7 +32,7 @@ internal class TestBinderInternal(scope: CoBindable, binder: Binder) : TestBinde
 
     override infix fun <T> Event<T>.assertOverParameter(block: (T) -> Unit) {
         counter++
-        getEventAssertions()?.add {
+        getAssertions()?.add {
             counter--
             block(it)
         }
@@ -48,11 +48,11 @@ internal class TestBinderInternal(scope: CoBindable, binder: Binder) : TestBinde
         }
     }
 
-    fun <T> Event<T>.getEventAssertions() = assertions.getOrPut(this) { mutableListOf<Assertion<T>>() } as? MutableList<Assertion<T>>
+    private fun <T> Event<T>.getAssertions() = assertions.getOrPut(this) { mutableListOf<Assertion<T>>() } as? MutableList<Assertion<T>>
 
     override infix fun <T> Event<T>.withParameter(param: T) {
         counter++
-        getEventAssertions()?.add {
+        getAssertions()?.add {
             counter--
             assert(it == param) { "value mismatch expected: $param but was $it" }
         }
@@ -60,7 +60,7 @@ internal class TestBinderInternal(scope: CoBindable, binder: Binder) : TestBinde
 
     override fun <T : Any> Event<T?>.withTypeNullable(type: KClass<*>) {
         counter++
-        getEventAssertions()?.add { value ->
+        getAssertions()?.add { value ->
             counter--
             value?.let { assert(type.isInstance(it)) { "type mismatch expected: $type but was ${it::class}" } }
         }
@@ -68,7 +68,7 @@ internal class TestBinderInternal(scope: CoBindable, binder: Binder) : TestBinde
 
     override fun <T : Any> Event<T>.withType(type: KClass<*>) {
         counter++
-        getEventAssertions()?.add { value ->
+        getAssertions()?.add { value ->
             counter--
             assert(type.isInstance(value)) { "type mismatch expected: $type but was ${value::class}" }
         }
@@ -76,7 +76,7 @@ internal class TestBinderInternal(scope: CoBindable, binder: Binder) : TestBinde
 
     override infix fun <T> Event<T>.withAny(param: Parameter) {
         counter++
-        getEventAssertions()?.add {
+        getAssertions()?.add {
             counter--
         }
     }
