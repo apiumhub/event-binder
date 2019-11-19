@@ -27,7 +27,7 @@ fun Fragment.whenViewCreated(block: suspend CoroutineScope.() -> Unit) {
 inline fun <reified T : Fragment> T.lazyBinds() = inject<Binder>(named<T>()) { parametersOf(this) }
 inline fun <reified T : Fragment> T.applyBinds() = get<Binder>(named<T>()) { parametersOf(this) }
 
-inline fun <reified T> Module.koinBind(noinline block: Scope.(T) -> Unit) {
+inline fun <reified T> Module.koinBind(noinline block: Scope.(T) -> Binder) {
     factory(named<T>()) { (bindable: T) ->
         block(bindable)
     }

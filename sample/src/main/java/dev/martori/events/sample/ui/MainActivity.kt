@@ -26,6 +26,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         loadKoinModules(mainModule)
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         unloadKoinModules(mainModule)

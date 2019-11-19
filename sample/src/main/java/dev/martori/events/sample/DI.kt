@@ -10,17 +10,20 @@ import dev.martori.events.sample.binding.services.DetailsService
 import dev.martori.events.sample.binding.services.LoadElementsService
 import dev.martori.events.sample.binding.services.MainService
 import dev.martori.events.sample.data.inmemory.InMemoryCounterRepository
+import dev.martori.events.sample.data.network.api.DetailsApi
 import dev.martori.events.sample.data.network.ktor.KtorDetailsApi
 import dev.martori.events.sample.domain.repositories.CounterRepository
 import dev.martori.events.sample.domain.services.DelayedCounterService
-import dev.martori.events.sample.domain.services.InMemoryDetailsService
 import dev.martori.events.sample.domain.services.MainDelayService
 import dev.martori.events.sample.domain.services.MockLoadElementsService
+import dev.martori.events.sample.domain.services.RemoteDetailsService
 import dev.martori.events.sample.ui.DetailsFragment
 import dev.martori.events.sample.ui.MainListFragment
 import dev.martori.events.sample.ui.koinBind
 import io.ktor.client.HttpClient
 import io.ktor.client.features.defaultRequest
+import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.request.host
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -30,7 +33,7 @@ import org.koin.dsl.module
 private val services = module {
     single<MainService> { MainDelayService() }
     single<CounterService> { DelayedCounterService(get()) }
-    single<DetailsService> { InMemoryDetailsService() }
+    single<DetailsService> { RemoteDetailsService(get()) }
     single<LoadElementsService> { MockLoadElementsService() }
 }
 
@@ -41,12 +44,15 @@ private val repositories = module {
 private val ktor = module {
     single {
         HttpClient {
+            install(JsonFeature) {
+                serializer = KotlinxSerializer()
+            }
             defaultRequest {
-                host = "127.0.0.1"
+                host = "127.0.0.1:8080"
             }
         }
     }
-    single { KtorDetailsApi(get()) }
+    single<DetailsApi> { KtorDetailsApi(get()) }
 }
 
 private val binds = module {
