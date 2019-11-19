@@ -1,6 +1,5 @@
 package dev.martori.events.sample.ui
 
-import android.util.Log
 import androidx.fragment.app.Fragment
 import dev.martori.events.android.event
 import dev.martori.events.android.receiver
@@ -35,7 +34,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details), DetailView {
                 stateTextView.text = "Loading..."
             }
             is AsyncView.Error -> {
-                Log.e(this::class.simpleName, "ups", it.reason)
                 stateTextView.text = "Error!"
             }
         }

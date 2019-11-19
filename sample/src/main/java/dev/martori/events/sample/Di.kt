@@ -5,18 +5,13 @@ import dev.martori.events.sample.binding.binds.bindDetailsNavigation
 import dev.martori.events.sample.binding.binds.bindDetailsService
 import dev.martori.events.sample.binding.binds.bindListNavigation
 import dev.martori.events.sample.binding.binds.bindLoadElementsService
-import dev.martori.events.sample.binding.services.CounterService
-import dev.martori.events.sample.binding.services.DetailsService
-import dev.martori.events.sample.binding.services.LoadElementsService
-import dev.martori.events.sample.binding.services.MainService
+import dev.martori.events.sample.binding.services.*
+import dev.martori.events.sample.binding.views.DetailViewModel
 import dev.martori.events.sample.data.inmemory.InMemoryCounterRepository
 import dev.martori.events.sample.data.network.api.DetailsApi
 import dev.martori.events.sample.data.network.ktor.KtorDetailsApi
 import dev.martori.events.sample.domain.repositories.CounterRepository
-import dev.martori.events.sample.domain.services.DelayedCounterService
-import dev.martori.events.sample.domain.services.MainDelayService
-import dev.martori.events.sample.domain.services.MockLoadElementsService
-import dev.martori.events.sample.domain.services.RemoteDetailsService
+import dev.martori.events.sample.domain.services.*
 import dev.martori.events.sample.ui.DetailsFragment
 import dev.martori.events.sample.ui.MainListFragment
 import dev.martori.events.sample.ui.koinBind
@@ -35,6 +30,7 @@ private val services = module {
     single<CounterService> { DelayedCounterService(get()) }
     single<DetailsService> { RemoteDetailsService(get()) }
     single<LoadElementsService> { MockLoadElementsService() }
+    single<ErrorLogger<DetailViewModel>> { AndroidErrorLogger() }
 }
 
 private val repositories = module {
