@@ -6,7 +6,6 @@ import dev.martori.events.sample.binding.binds.bindDetailsService
 import dev.martori.events.sample.binding.binds.bindListNavigation
 import dev.martori.events.sample.binding.binds.bindLoadElementsService
 import dev.martori.events.sample.binding.services.*
-import dev.martori.events.sample.binding.views.DetailViewModel
 import dev.martori.events.sample.data.inmemory.InMemoryCounterRepository
 import dev.martori.events.sample.data.network.api.DetailsApi
 import dev.martori.events.sample.data.network.ktor.KtorDetailsApi
@@ -30,7 +29,7 @@ private val services = module {
     single<CounterService> { DelayedCounterService(get()) }
     single<DetailsService> { RemoteDetailsService(get()) }
     single<LoadElementsService> { MockLoadElementsService() }
-    single<ErrorLogger<DetailViewModel>> { AndroidErrorLogger() }
+    single<ErrorLogger> { AndroidErrorLogger() }
 }
 
 private val repositories = module {

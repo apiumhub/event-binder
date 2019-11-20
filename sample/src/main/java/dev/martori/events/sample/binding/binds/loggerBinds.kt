@@ -4,8 +4,10 @@ import dev.martori.events.core.Bindable
 import dev.martori.events.core.bind
 import dev.martori.events.sample.binding.services.DetailsService
 import dev.martori.events.sample.binding.services.ErrorLogger
-import dev.martori.events.sample.binding.views.DetailViewModel
+import dev.martori.events.sample.binding.views.AsyncView
 
-fun Bindable.bindDetailsErrors(detailsService: DetailsService, errorLogger: ErrorLogger<DetailViewModel>) = bind {
-    detailsService.sendState via errorLogger.onError
+fun Bindable.bindDetailsErrors(detailsService: DetailsService, errorLogger: ErrorLogger) = bind {
+    detailsService.sendState
+        .filter { it is AsyncView.Error }
+        .map { it as AsyncView.Error<*> } via errorLogger.onError
 }

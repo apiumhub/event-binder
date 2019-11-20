@@ -9,6 +9,8 @@ typealias ReceiverU = Receiver<Unit>
 
 interface Event<T> {
     operator fun invoke(data: T)
+    fun <R> map(block: (T) -> R): Event<R>
+    fun filter(block: (T) -> Boolean): Event<T>
 }
 typealias EventU = Event<Unit>
 

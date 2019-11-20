@@ -6,8 +6,8 @@ import dev.martori.events.core.receiver
 import dev.martori.events.sample.binding.services.ErrorLogger
 import dev.martori.events.sample.binding.views.AsyncView
 
-class AndroidErrorLogger<T> : ErrorLogger<T> {
-    override val onError: Receiver<AsyncView<T>> = receiver {
-        if (it is AsyncView.Error) Log.e("ErrorLogger", "unkownError", it.reason)
+class AndroidErrorLogger : ErrorLogger {
+    override val onError: Receiver<AsyncView.Error<*>> = receiver {
+        Log.e("ErrorLogger", "unkownError", it.reason)
     }
 }
