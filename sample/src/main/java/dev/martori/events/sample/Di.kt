@@ -1,6 +1,7 @@
 package dev.martori.events.sample
 
 import android.app.Application
+import com.dropbox.android.external.store4.StoreBuilder
 import dev.martori.events.sample.binding.binds.bindDetailsNavigation
 import dev.martori.events.sample.binding.binds.bindDetailsService
 import dev.martori.events.sample.binding.binds.bindListNavigation
@@ -8,6 +9,7 @@ import dev.martori.events.sample.binding.binds.bindLoadElementsService
 import dev.martori.events.sample.binding.services.*
 import dev.martori.events.sample.data.inmemory.InMemoryCounterRepository
 import dev.martori.events.sample.data.network.api.DetailsApi
+import dev.martori.events.sample.data.network.api.DetailsDto
 import dev.martori.events.sample.data.network.ktor.KtorDetailsApi
 import dev.martori.events.sample.domain.repositories.CounterRepository
 import dev.martori.events.sample.domain.services.*
@@ -22,14 +24,19 @@ import io.ktor.client.request.host
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 private val services = module {
     single<MainService> { MainDelayService() }
     single<CounterService> { DelayedCounterService(get()) }
-    single<DetailsService> { RemoteDetailsService(get()) }
+    single<DetailsService> { StoreDetailsService(get(named<DetailsDto>())) }
     single<LoadElementsService> { MockLoadElementsService() }
     single<ErrorLogger> { AndroidErrorLogger() }
+}
+
+private val stores = module {
+    single(named<DetailsDto>()) { StoreBuilder.fromNonFlow { id: Int -> get<DetailsApi>().getDetails(id) }.build() }
 }
 
 private val repositories = module {
@@ -61,7 +68,7 @@ private val binds = module {
     }
 }
 
-private val modulesList = listOf(services, binds, repositories, ktor)
+private val modulesList = listOf(services, binds, repositories, ktor, stores)
 
 fun Application.initKoin() {
     startKoin {
