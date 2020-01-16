@@ -1,7 +1,7 @@
 package dev.martori.events.sample.domain.services
 
 import com.dropbox.android.external.store4.Store
-import com.dropbox.android.external.store4.get
+import com.dropbox.android.external.store4.fresh
 import dev.martori.events.core.Event
 import dev.martori.events.core.Receiver
 import dev.martori.events.core.event
@@ -18,7 +18,7 @@ class StoreDetailsService(store: DetailsStore) : DetailsService {
 
     override val loadDetails: Receiver<Int> = suspendReceiver { id ->
         sendState(AsyncView.Loading())
-        runCatching { store.get(id) }.fold({ details ->
+        runCatching { store.fresh(id) }.fold({ details ->
             sendState(AsyncView.Success(details.toViewModel()))
         }, {
             sendState(AsyncView.Error(Error(it)))
