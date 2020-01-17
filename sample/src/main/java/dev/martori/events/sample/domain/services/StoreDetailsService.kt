@@ -8,22 +8,18 @@ import dev.martori.events.core.event
 import dev.martori.events.coroutines.suspendReceiver
 import dev.martori.events.sample.binding.services.DetailsService
 import dev.martori.events.sample.binding.views.AsyncView
-import dev.martori.events.sample.binding.views.DetailViewModel
-import dev.martori.events.sample.data.network.api.DetailsDto
+import dev.martori.events.sample.domain.entities.Details
 
-typealias DetailsStore = Store<Int, DetailsDto>
+typealias DetailsStore = Store<Int, Details>
 
 class StoreDetailsService(store: DetailsStore) : DetailsService {
-    override val sendState: Event<AsyncView<DetailViewModel>> = event()
-
+    override val sendState: Event<AsyncView<Details>> = event()
     override val loadDetails: Receiver<Int> = suspendReceiver { id ->
         sendState(AsyncView.Loading())
         runCatching { store.fresh(id) }.fold({ details ->
-            sendState(AsyncView.Success(details.toViewModel()))
+            sendState(AsyncView.Success(details))
         }, {
             sendState(AsyncView.Error(Error(it)))
         })
     }
 }
-
-private fun DetailsDto.toViewModel() = DetailViewModel(id, name)

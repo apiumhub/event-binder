@@ -10,6 +10,7 @@ import dev.martori.events.sample.binding.services.*
 import dev.martori.events.sample.data.inmemory.InMemoryCounterRepository
 import dev.martori.events.sample.data.network.api.DetailsApi
 import dev.martori.events.sample.data.network.api.DetailsDto
+import dev.martori.events.sample.data.network.api.toDomain
 import dev.martori.events.sample.data.network.ktor.KtorDetailsApi
 import dev.martori.events.sample.domain.repositories.CounterRepository
 import dev.martori.events.sample.domain.services.*
@@ -36,7 +37,7 @@ private val services = module {
 }
 
 private val stores = module {
-    single(named<DetailsDto>()) { StoreBuilder.fromNonFlow { id: Int -> get<DetailsApi>().getDetails(id) }.build() }
+    single(named<DetailsDto>()) { StoreBuilder.fromNonFlow { id: Int -> get<DetailsApi>().getDetails(id).toDomain() }.build() }
 }
 
 private val repositories = module {

@@ -9,7 +9,8 @@ import dev.martori.events.core.Receiver
 import dev.martori.events.sample.R
 import dev.martori.events.sample.binding.views.AsyncView
 import dev.martori.events.sample.binding.views.DetailView
-import dev.martori.events.sample.binding.views.DetailViewModel
+import dev.martori.events.sample.domain.entities.Details
+import dev.martori.events.sample.ui.models.toViewModel
 import kotlinx.android.synthetic.main.fragment_details.*
 
 class DetailsFragment : Fragment(R.layout.fragment_details), DetailView {
@@ -25,10 +26,10 @@ class DetailsFragment : Fragment(R.layout.fragment_details), DetailView {
 
     override val loadDetails: Event<Int> = event()
     override val goBack: EventU = event()
-    override val renderState: Receiver<AsyncView<DetailViewModel>> = receiver {
+    override val renderState: Receiver<AsyncView<Details>> = receiver {
         when (it) {
             is AsyncView.Success -> {
-                stateTextView.text = "Name: ${it.model.name}"
+                stateTextView.text = "Name: ${it.model.toViewModel().name}"
             }
             is AsyncView.Loading -> {
                 stateTextView.text = "Loading..."
