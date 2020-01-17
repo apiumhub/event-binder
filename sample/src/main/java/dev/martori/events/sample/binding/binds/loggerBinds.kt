@@ -14,5 +14,5 @@ fun Bindable.bindDetailsErrors(detailsService: DetailsService, errorLogger: Erro
 }
 
 fun Bindable.bindAnimeListErrors(service: AnimeListService, errorLogger: ErrorLogger) = bind {
-    service.error via errorLogger.onError
+    service.errorReceived via errorLogger.onError
 }

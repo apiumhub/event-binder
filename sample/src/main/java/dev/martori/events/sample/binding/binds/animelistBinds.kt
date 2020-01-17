@@ -7,7 +7,7 @@ import dev.martori.events.sample.binding.views.AnimeListView
 
 fun ViewBindable.bindAnimeList(view: AnimeListView, service: AnimeListService) = bind {
     view.displayAnimeList via service.animeListReceived
-    view.onError via service.error
+    view.onError via service.errorReceived
     view.onLoading via service.startFetching
     view.requestAnimeByYear via service.loadAnimeByYear
 }

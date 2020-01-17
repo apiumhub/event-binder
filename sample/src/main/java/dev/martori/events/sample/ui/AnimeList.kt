@@ -10,6 +10,7 @@ import dev.martori.events.sample.R
 import dev.martori.events.sample.binding.views.AnimeListView
 import dev.martori.events.sample.domain.entities.Anime
 import dev.martori.events.sample.ui.adapters.AnimeListAdapter
+import dev.martori.events.sample.ui.models.toViewModel
 import kotlinx.android.synthetic.main.fragment_main_list.*
 
 class AnimeList : Fragment(R.layout.fragment_main_list), AnimeListView {
@@ -22,14 +23,14 @@ class AnimeList : Fragment(R.layout.fragment_main_list), AnimeListView {
     override val onLoading: ReceiverU = receiver {
         context?.toast("Loading...")
     }
-    override val displayAnimeList: Receiver<List<Anime>> = receiver {
-
+    override val displayAnimeList: Receiver<List<Anime>> = receiver { list ->
+        adapter.elements = list.map { it.toViewModel() }
     }
 
     init {
         whenCreated {
             applyBinds()
-            requestAnimeByYear(2020)
+            requestAnimeByYear(2019)
         }
         whenViewCreated {
             mainList.adapter = adapter

@@ -10,4 +10,7 @@ class AndroidErrorLogger : ErrorLogger {
     override val onAsyncError: Receiver<AsyncView.Error<*>> = receiver {
         Log.e("ErrorLogger", "unkownError", it.reason)
     }
+    override val onError: Receiver<Error> = receiver {
+        Log.e("ErrorLogger", "unkownError", it)
+    }
 }
