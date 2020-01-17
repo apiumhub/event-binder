@@ -6,7 +6,7 @@
     app:startDestination="@id/list">
     <fragment
         android:id="@+id/list"
-        android:name="dev.martori.events.sample.ui.MainListFragment"
+        android:name="dev.martori.events.sample.ui.AnimeList"
         tools:layout="@layout/fragment_main_list"
         android:label="MainListFragment">
         <action

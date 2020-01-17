@@ -2,20 +2,21 @@ package dev.martori.events.sample
 
 import android.app.Application
 import com.dropbox.android.external.store4.StoreBuilder
+import dev.martori.events.sample.binding.binds.bindAnimeList
 import dev.martori.events.sample.binding.binds.bindDetailsNavigation
 import dev.martori.events.sample.binding.binds.bindDetailsService
-import dev.martori.events.sample.binding.binds.bindListNavigation
-import dev.martori.events.sample.binding.binds.bindLoadElementsService
 import dev.martori.events.sample.binding.services.*
 import dev.martori.events.sample.data.inmemory.InMemoryCounterRepository
+import dev.martori.events.sample.data.network.api.AnimeApi
 import dev.martori.events.sample.data.network.api.DetailsApi
 import dev.martori.events.sample.data.network.api.DetailsDto
 import dev.martori.events.sample.data.network.api.toDomain
+import dev.martori.events.sample.data.network.ktor.KtorAnimeApi
 import dev.martori.events.sample.data.network.ktor.KtorDetailsApi
 import dev.martori.events.sample.domain.repositories.CounterRepository
 import dev.martori.events.sample.domain.services.*
+import dev.martori.events.sample.ui.AnimeList
 import dev.martori.events.sample.ui.DetailsFragment
-import dev.martori.events.sample.ui.MainListFragment
 import dev.martori.events.sample.ui.koinBind
 import io.ktor.client.HttpClient
 import io.ktor.client.features.defaultRequest
@@ -45,7 +46,7 @@ private val repositories = module {
 }
 
 private val ktor = module {
-    single {
+    single(named("mock")) {
         HttpClient {
             install(JsonFeature) {
                 serializer = KotlinxSerializer()
@@ -55,7 +56,18 @@ private val ktor = module {
             }
         }
     }
-    single<DetailsApi> { KtorDetailsApi(get()) }
+    single(named("kitsu")) {
+        HttpClient {
+            install(JsonFeature) {
+                serializer = KotlinxSerializer()
+            }
+            defaultRequest {
+                host = "https://kitsu.io/api/edge"
+            }
+        }
+    }
+    single<DetailsApi> { KtorDetailsApi(get(named("mock"))) }
+    single<AnimeApi> { KtorAnimeApi(get(named("kitsu"))) }
 }
 
 private val binds = module {
@@ -63,9 +75,8 @@ private val binds = module {
         details.bindDetailsService(details, get())
         details.bindDetailsNavigation(details, get())
     }
-    koinBind<MainListFragment> { mainList ->
-        mainList.bindListNavigation(mainList, get())
-        mainList.bindLoadElementsService(mainList, get())
+    koinBind<AnimeList> { animeList ->
+        animeList.bindAnimeList(animeList, get())
     }
 }
 

@@ -2,6 +2,7 @@ package dev.martori.events.sample
 
 import android.app.Application
 import dev.martori.events.core.GlobalBind
+import dev.martori.events.sample.binding.binds.bindAnimeListErrors
 import dev.martori.events.sample.binding.binds.bindDetailsErrors
 import dev.martori.events.sample.data.network.api.DetailsDto
 import io.ktor.application.call
@@ -29,5 +30,6 @@ class App : Application() {
         }.start()
         initKoin()
         GlobalBind.bindDetailsErrors(get(), get())
+        GlobalBind.bindAnimeListErrors(get(), get())
     }
 }

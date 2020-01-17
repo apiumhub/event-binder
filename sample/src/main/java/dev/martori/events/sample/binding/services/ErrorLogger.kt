@@ -5,5 +5,6 @@ import dev.martori.events.core.Receiver
 import dev.martori.events.sample.binding.views.AsyncView
 
 interface ErrorLogger : Bindable {
-    val onError: Receiver<AsyncView.Error<*>>
+    val onAsyncError: Receiver<AsyncView.Error<*>>
+    val onError: Receiver<Error>
 }
