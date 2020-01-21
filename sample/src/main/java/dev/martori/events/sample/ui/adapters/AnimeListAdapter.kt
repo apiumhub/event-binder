@@ -20,9 +20,9 @@ class AnimeListAdapter(private val endReached: (count: Int) -> Unit) : RecyclerV
     override fun getItemCount(): Int = elements.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val name = elements[position].name
-        holder.itemView.itemId.text = "0"
-        holder.itemView.itemName.text = name
+        val anime = elements[position]
+        holder.itemView.itemId.text = anime.id
+        holder.itemView.itemName.text = anime.name
         if (position >= itemCount - 1) endReached(itemCount)
     }
 }

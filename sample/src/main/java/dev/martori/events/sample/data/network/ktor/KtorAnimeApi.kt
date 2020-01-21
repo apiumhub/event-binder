@@ -7,11 +7,17 @@ import io.ktor.client.request.get
 
 class KtorAnimeApi(private val client: HttpClient) : AnimeApi {
     override suspend fun getAnimeList(offset: Int): List<AnimeDto> =
-        client.get<Response<AnimeDto>>("/anime?page[offset]=$offset&sort=-favoritesCount").dtos()
+        client.get<Response<AnimeDto>>("/anime?page[offset]=$offset&sort=-favoritesCount")
+            .dtos()
+            .map { (id, dto) -> dto.copy(id = id) }
 }
 
-data class Response<T>(val data: List<ResponseObject<T>>) {
-    fun dtos() = data.map { it.attributes }
+interface NetworkDto {
+    val id: String
 }
 
-data class ResponseObject<T>(val attributes: T)
+data class Response<T : NetworkDto>(val data: List<ResponseObject<T>>) {
+    fun dtos() = data.map { it.id to it.attributes }
+}
+
+data class ResponseObject<T>(val id: String, val attributes: T)
