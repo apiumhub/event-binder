@@ -5,6 +5,7 @@ import com.dropbox.android.external.store4.StoreBuilder
 import dev.martori.events.sample.binding.binds.bindAnimeList
 import dev.martori.events.sample.binding.binds.bindDetailsNavigation
 import dev.martori.events.sample.binding.binds.bindDetailsService
+import dev.martori.events.sample.binding.models.AnimeRequestByYear
 import dev.martori.events.sample.binding.services.*
 import dev.martori.events.sample.data.dto.toDomain
 import dev.martori.events.sample.data.inmemory.InMemoryCounterRepository
@@ -45,7 +46,7 @@ private val services = module {
 
 private val stores = module {
     single(named<DetailsDto>()) { StoreBuilder.fromNonFlow { id: Int -> get<DetailsApi>().getDetails(id).toDomain() }.build() }
-    single(named<Anime>()) { StoreBuilder.fromNonFlow { year: Int -> get<AnimeApi>().getAnimeListByYear(year).map { it.toDomain() } }.build() }
+    single(named<Anime>()) { StoreBuilder.fromNonFlow { request: AnimeRequestByYear -> get<AnimeApi>().getAnimeListByYear(request.year, request.count).map { it.toDomain() } }.build() }
 }
 
 private val repositories = module {

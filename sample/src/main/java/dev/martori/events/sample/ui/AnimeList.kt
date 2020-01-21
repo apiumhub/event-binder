@@ -7,6 +7,7 @@ import dev.martori.events.core.Event
 import dev.martori.events.core.Receiver
 import dev.martori.events.core.ReceiverU
 import dev.martori.events.sample.R
+import dev.martori.events.sample.binding.models.AnimeRequestByYear
 import dev.martori.events.sample.binding.views.AnimeListView
 import dev.martori.events.sample.domain.entities.Anime
 import dev.martori.events.sample.ui.adapters.AnimeListAdapter
@@ -14,23 +15,28 @@ import dev.martori.events.sample.ui.models.toViewModel
 import kotlinx.android.synthetic.main.fragment_main_list.*
 
 class AnimeList : Fragment(R.layout.fragment_main_list), AnimeListView {
-    private val adapter = AnimeListAdapter {}
 
-    override val requestAnimeByYear: Event<Int> = event()
+    private val year: Int = 2019
+
+    private val adapter = AnimeListAdapter {
+        requestAnimeByYear(AnimeRequestByYear(year, it))
+    }
+
+    override val requestAnimeByYear: Event<AnimeRequestByYear> = event()
     override val onError: Receiver<Error> = receiver {
-        context?.toast("Error: ${it.message}")
+        Toast("Error: ${it.message}")
     }
     override val onLoading: ReceiverU = receiver {
-        context?.toast("Loading...")
+        Toast("Loading...")
     }
     override val displayAnimeList: Receiver<List<Anime>> = receiver { list ->
-        adapter.elements = list.map { it.toViewModel() }
+        adapter.elements = (adapter.elements + list.map { it.toViewModel() }).distinct()
     }
 
     init {
         whenCreated {
             applyBinds()
-            requestAnimeByYear(2019)
+            requestAnimeByYear(AnimeRequestByYear(year))
         }
         whenViewCreated {
             mainList.adapter = adapter

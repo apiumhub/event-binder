@@ -26,6 +26,7 @@ fun Fragment.whenViewCreated(block: suspend CoroutineScope.() -> Unit) {
         it.lifecycleScope.launchWhenCreated(block)
     }
 }
+
 inline fun <reified T : Fragment> T.lazyBinds() = inject<Binder>(named<T>()) { parametersOf(this) }
 inline fun <reified T : Fragment> T.applyBinds() = get<Binder>(named<T>()) { parametersOf(this) }
 
@@ -39,3 +40,5 @@ fun ViewGroup.inflate(@LayoutRes layoutId: Int): View = LayoutInflater.from(cont
 
 fun Context.toast(message: CharSequence) =
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+
+fun Fragment.Toast(message: CharSequence) = context?.toast(message)

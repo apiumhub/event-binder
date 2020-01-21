@@ -8,7 +8,7 @@ import dev.martori.events.sample.ui.models.AnimeViewModel
 import kotlinx.android.synthetic.main.item_main_list.view.*
 import kotlin.properties.Delegates
 
-class AnimeListAdapter(private val clickListener: (AnimeViewModel) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class AnimeListAdapter(private val endReached: (count: Int) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var elements: List<AnimeViewModel> by Delegates.observable(emptyList()) { _, _, _ ->
         notifyDataSetChanged()
@@ -23,6 +23,6 @@ class AnimeListAdapter(private val clickListener: (AnimeViewModel) -> Unit) : Re
         val name = elements[position].name
         holder.itemView.itemId.text = "0"
         holder.itemView.itemName.text = name
-        holder.itemView.setOnClickListener { clickListener(elements[position]) }
+        if (position >= itemCount - 1) endReached(itemCount)
     }
 }
