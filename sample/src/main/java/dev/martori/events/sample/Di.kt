@@ -1,7 +1,9 @@
 package dev.martori.events.sample
 
 import android.app.Application
+import com.dropbox.android.external.store4.Store
 import com.dropbox.android.external.store4.StoreBuilder
+import com.dropbox.android.external.store4.get
 import dev.martori.events.sample.binding.binds.bindAnimeList
 import dev.martori.events.sample.binding.binds.bindDetailsNavigation
 import dev.martori.events.sample.binding.binds.bindDetailsService
@@ -17,6 +19,7 @@ import dev.martori.events.sample.data.network.ktor.KtorAnimeApi
 import dev.martori.events.sample.data.network.ktor.KtorDetailsApi
 import dev.martori.events.sample.domain.entities.Anime
 import dev.martori.events.sample.domain.repositories.CounterRepository
+import dev.martori.events.sample.domain.repositories.Repository
 import dev.martori.events.sample.domain.services.*
 import dev.martori.events.sample.ui.AnimeList
 import dev.martori.events.sample.ui.DetailsFragment
@@ -44,9 +47,13 @@ private val services = module {
     single<ErrorLogger> { AndroidErrorLogger() }
 }
 
+private fun <K : Any, O : Any> Store<K, O>.repo() = object : Repository<K, O> {
+    override suspend fun get(key: K): O = this@repo.get(key)
+}
+
 private val stores = module {
     single(named<DetailsDto>()) { StoreBuilder.fromNonFlow { id: Int -> get<DetailsApi>().getDetails(id).toDomain() }.build() }
-    single(named<Anime>()) { StoreBuilder.fromNonFlow { request: AnimeRequest -> get<AnimeApi>().getAnimeList(request.count).map { it.toDomain() } }.build() }
+    single(named<Anime>()) { StoreBuilder.fromNonFlow { request: AnimeRequest -> get<AnimeApi>().getAnimeList(request.count).map { it.toDomain() } }.build().repo() }
 }
 
 private val repositories = module {

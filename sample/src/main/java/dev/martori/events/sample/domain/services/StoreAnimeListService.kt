@@ -1,17 +1,17 @@
 package dev.martori.events.sample.domain.services
 
-import com.dropbox.android.external.store4.Store
-import com.dropbox.android.external.store4.get
 import dev.martori.events.core.*
 import dev.martori.events.coroutines.suspendReceiver
 import dev.martori.events.sample.binding.models.AnimeRequest
 import dev.martori.events.sample.binding.services.AnimeListService
 import dev.martori.events.sample.domain.entities.Anime
+import dev.martori.events.sample.domain.repositories.Repository
 
-class StoreAnimeListService(store: Store<AnimeRequest, List<Anime>>) : AnimeListService {
+
+class StoreAnimeListService(repository: Repository<AnimeRequest, List<Anime>>) : AnimeListService {
     override val loadAnime: Receiver<AnimeRequest> = suspendReceiver {
         startFetching()
-        runCatching { store.get(it) }.fold({
+        runCatching { repository.get(it) }.fold({
             animeListReceived(it)
         }, {
             errorReceived(Error(it))
