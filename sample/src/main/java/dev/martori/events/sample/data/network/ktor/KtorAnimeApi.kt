@@ -6,7 +6,8 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 
 class KtorAnimeApi(private val client: HttpClient) : AnimeApi {
-    override suspend fun getAnimeListByYear(year: Int, offset: Int): List<AnimeDto> = client.get<Response<AnimeDto>>("/anime?filter[seasonYear]=${year}&page[offset]=$offset").dtos()
+    override suspend fun getAnimeList(offset: Int): List<AnimeDto> =
+        client.get<Response<AnimeDto>>("/anime?page[offset]=$offset&sort=-favoritesCount").dtos()
 }
 
 data class Response<T>(val data: List<ResponseObject<T>>) {

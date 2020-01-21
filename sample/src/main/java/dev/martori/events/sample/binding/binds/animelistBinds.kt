@@ -9,5 +9,5 @@ fun ViewBindable.bindAnimeList(view: AnimeListView, service: AnimeListService) =
     view.displayAnimeList via service.animeListReceived
     view.onError via service.errorReceived
     view.onLoading via service.startFetching
-    view.requestAnimeByYear via service.loadAnimeByYear
+    view.requestAnime via service.loadAnime
 }

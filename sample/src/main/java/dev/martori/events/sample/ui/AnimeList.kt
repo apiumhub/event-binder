@@ -7,7 +7,7 @@ import dev.martori.events.core.Event
 import dev.martori.events.core.Receiver
 import dev.martori.events.core.ReceiverU
 import dev.martori.events.sample.R
-import dev.martori.events.sample.binding.models.AnimeRequestByYear
+import dev.martori.events.sample.binding.models.AnimeRequest
 import dev.martori.events.sample.binding.views.AnimeListView
 import dev.martori.events.sample.domain.entities.Anime
 import dev.martori.events.sample.ui.adapters.AnimeListAdapter
@@ -16,13 +16,11 @@ import kotlinx.android.synthetic.main.fragment_main_list.*
 
 class AnimeList : Fragment(R.layout.fragment_main_list), AnimeListView {
 
-    private val year: Int = 2019
-
     private val adapter = AnimeListAdapter {
-        requestAnimeByYear(AnimeRequestByYear(year, it))
+        requestAnime(AnimeRequest(it))
     }
 
-    override val requestAnimeByYear: Event<AnimeRequestByYear> = event()
+    override val requestAnime: Event<AnimeRequest> = event()
     override val onError: Receiver<Error> = receiver {
         Toast("Error: ${it.message}")
     }
@@ -36,7 +34,7 @@ class AnimeList : Fragment(R.layout.fragment_main_list), AnimeListView {
     init {
         whenCreated {
             applyBinds()
-            requestAnimeByYear(AnimeRequestByYear(year))
+            requestAnime(AnimeRequest())
         }
         whenViewCreated {
             mainList.adapter = adapter
