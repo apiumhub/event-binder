@@ -16,9 +16,14 @@ import kotlinx.android.synthetic.main.fragment_main_list.*
 
 class AnimeList : Fragment(R.layout.fragment_main_list), AnimeListView {
 
-    private val adapter = AnimeListAdapter {
-        requestAnime(AnimeRequest(it))
-    }
+    private val adapter = AnimeListAdapter(
+        endReached = {
+            requestAnime(AnimeRequest(it))
+        }, clickListener = {
+            //TODO open details
+            Toast("anime with id: $it clicked")
+        }
+    )
 
     override val requestAnime: Event<AnimeRequest> = event()
     override val onError: Receiver<Error> = receiver {
