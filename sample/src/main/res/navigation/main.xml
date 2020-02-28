@@ -8,23 +8,5 @@
         android:id="@+id/list"
         android:name="dev.martori.events.sample.ui.AnimeList"
         tools:layout="@layout/fragment_main_list"
-        android:label="MainListFragment">
-        <action
-            android:id="@+id/action_list_to_details"
-            app:destination="@id/details" />
-    </fragment>
-    <fragment
-        android:id="@+id/details"
-        android:name="dev.martori.events.sample.ui.DetailsFragment"
-        tools:layout="@layout/fragment_details"
-        android:label="DetailsFragment">
-        <argument
-            android:name="id"
-            app:argType="integer" />
-    </fragment>
-    <fragment
-        android:id="@+id/libTestFragment"
-        android:name="dev.martori.events.sample.ui.LibTestFragment"
-        android:label="fragment_lib_test"
-        tools:layout="@layout/fragment_lib_test" />
+        android:label="MainListFragment" />
 </navigation>
