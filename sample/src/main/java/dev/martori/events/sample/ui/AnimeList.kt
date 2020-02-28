@@ -7,7 +7,7 @@ import dev.martori.events.core.Event
 import dev.martori.events.core.Receiver
 import dev.martori.events.core.ReceiverU
 import dev.martori.events.sample.R
-import dev.martori.events.sample.binding.models.AnimeRequest
+import dev.martori.events.sample.binding.models.AnimeListRequest
 import dev.martori.events.sample.binding.views.AnimeListView
 import dev.martori.events.sample.domain.entities.Anime
 import dev.martori.events.sample.ui.adapters.AnimeListAdapter
@@ -18,14 +18,14 @@ class AnimeList : Fragment(R.layout.fragment_main_list), AnimeListView {
 
     private val adapter = AnimeListAdapter(
         endReached = {
-            requestAnime(AnimeRequest(it))
+            requestAnime(AnimeListRequest(it))
         }, clickListener = {
             //TODO open details
             Toast("anime with id: $it clicked")
         }
     )
 
-    override val requestAnime: Event<AnimeRequest> = event()
+    override val requestAnime: Event<AnimeListRequest> = event()
     override val onError: Receiver<Error> = receiver {
         Toast("Error: ${it.message}")
     }
@@ -39,7 +39,7 @@ class AnimeList : Fragment(R.layout.fragment_main_list), AnimeListView {
     init {
         whenCreated {
             applyBinds()
-            requestAnime(AnimeRequest())
+            requestAnime(AnimeListRequest())
         }
         whenViewCreated {
             mainList.adapter = adapter

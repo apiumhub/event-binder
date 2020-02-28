@@ -56,7 +56,7 @@ private val binds = module {
     }
 }
 
-private val modulesList = listOf(services, binds, ktor, repositories)
+val modulesList = listOf(services, binds, ktor, repositories)
 
 fun Application.initKoin() {
     startKoin {
