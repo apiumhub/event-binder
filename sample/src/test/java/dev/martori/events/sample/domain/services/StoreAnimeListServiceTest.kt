@@ -2,7 +2,7 @@ package dev.martori.events.sample.domain.services
 
 import dev.martori.events.sample.binding.models.AnimeRequest
 import dev.martori.events.sample.domain.entities.Anime
-import dev.martori.events.sample.domain.repositories.Repository
+import dev.martori.events.sample.domain.repositories.AnimeRepository
 import dev.martori.events.test.Parameter
 import dev.martori.events.test.shouldDispatch
 import dev.martori.events.test.withParameter
@@ -13,7 +13,7 @@ import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 
 class StoreAnimeListServiceTest {
-    private val repository: Repository<AnimeRequest, List<Anime>> = mockk(relaxed = true)
+    private val repository: AnimeRepository = mockk(relaxed = true)
     private val sut = StoreAnimeListService(repository)
 
     private val request = AnimeRequest()

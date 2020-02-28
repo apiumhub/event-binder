@@ -5,10 +5,10 @@ import dev.martori.events.coroutines.suspendReceiver
 import dev.martori.events.sample.binding.models.AnimeRequest
 import dev.martori.events.sample.binding.services.AnimeListService
 import dev.martori.events.sample.domain.entities.Anime
-import dev.martori.events.sample.domain.repositories.Repository
+import dev.martori.events.sample.domain.repositories.AnimeRepository
 
 
-class StoreAnimeListService(repository: Repository<AnimeRequest, List<Anime>>) : AnimeListService {
+class StoreAnimeListService(repository: AnimeRepository) : AnimeListService {
     override val loadAnime: Receiver<AnimeRequest> = suspendReceiver {
         startFetching()
         runCatching { repository.get(it) }.fold({
