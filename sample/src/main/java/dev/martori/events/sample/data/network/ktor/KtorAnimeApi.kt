@@ -25,3 +25,5 @@ data class Response<T : NetworkDto>(val data: List<ResponseObject<T>>) {
 }
 
 data class ResponseObject<T>(val id: String, val attributes: T)
+
+data class AnimeImage(val small: String, val large: String)

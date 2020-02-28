@@ -2,6 +2,7 @@ package dev.martori.events.sample.ui.adapters
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import coil.api.load
 import dev.martori.events.sample.R
 import dev.martori.events.sample.ui.inflate
 import dev.martori.events.sample.ui.models.AnimeViewModel
@@ -21,6 +22,7 @@ class AnimeListAdapter(private val endReached: (count: Int) -> Unit, private val
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val anime = elements[position]
+        holder.itemView.itemImage.load(anime.imageUrl)
         holder.itemView.itemName.text = anime.name
         if (position >= itemCount - 1) endReached(itemCount)
         holder.itemView.setOnClickListener { clickListener(anime.id) }

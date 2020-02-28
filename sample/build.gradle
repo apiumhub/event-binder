@@ -10,6 +10,12 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompile).all {
     kotlinOptions.freeCompilerArgs += ["-XXLanguage:+InlineClasses"]
 }
 
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -68,6 +74,8 @@ dependencies {
     implementation "io.ktor:ktor-gson:$ktor_version"
 
     implementation "com.dropbox.mobile.store:store4:$storeVersion"
+
+    implementation "io.coil-kt:coil:0.9.5"
 
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$androidLifecycle"
     implementation "androidx.appcompat:appcompat:1.1.0"
