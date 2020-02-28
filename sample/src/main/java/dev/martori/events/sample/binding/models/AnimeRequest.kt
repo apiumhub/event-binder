@@ -1,3 +1,3 @@
 package dev.martori.events.sample.binding.models
 
-data class AnimeDetailsRequest(val id: String)
+data class AnimeRequest(val id: Int)

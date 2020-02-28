@@ -10,6 +10,10 @@ class KtorAnimeApi(private val client: HttpClient) : AnimeApi {
         client.get<Response<AnimeDto>>("/anime?page[offset]=$offset&sort=-favoritesCount")
             .dtos()
             .map { (id, dto) -> dto.copy(id = id) }
+
+    override suspend fun getAnime(id: Int): AnimeDto {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }
 
 interface NetworkDto {
