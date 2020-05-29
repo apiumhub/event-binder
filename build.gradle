@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.0'
+        classpath 'com.android.tools.build:gradle:4.0.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -53,32 +53,32 @@ subprojects {
                 from android.sourceSets.main.java.srcDirs
             }
         }
-//        if (shouldPublish) {
-//            publishing {
-//                publications {
-//                    maven(MavenPublication) {
-//                        artifactId = "$rootProject.name-$project.name"
-//                        if (isJava) {
-//                            from components.java
-//                            artifact jvmSourcesJar
-//                        } else if (isAndroid) {
-//                            from components.android
-//                            artifact androidSourcesJar
-//                        }
-//                    }
-//                }
-//                repositories {
-//                    maven {
-//                        name 'NexusSNAPSHOT'
-//                        url snapshotsRepositoryUrl
-//                        credentials {
-//                            username = deployRepoUsername
-//                            password = deployRepoPassword
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        if (shouldPublish) {
+            publishing {
+                publications {
+                    maven(MavenPublication) {
+                        artifactId = "$rootProject.name-$project.name"
+                        if (isJava) {
+                            from components.java
+                            artifact jvmSourcesJar
+                        } else if (isAndroid) {
+                            from components.android
+                            artifact androidSourcesJar
+                        }
+                    }
+                }
+                repositories {
+                    maven {
+                        name 'NexusSNAPSHOT'
+                        url snapshotsRepositoryUrl
+                        credentials {
+                            username = deployRepoUsername
+                            password = deployRepoPassword
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
