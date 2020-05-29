@@ -7,6 +7,11 @@ object GlobalBind : Bindable
 interface Receiver<T>
 typealias ReceiverU = Receiver<Unit>
 
+@Experimental(Experimental.Level.ERROR)
+@Retention(AnnotationRetention.BINARY)
+@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
+annotation class WorkInProgress
+
 interface Event<T> {
     operator fun invoke(data: T)
     fun <R> map(block: (T) -> R): Event<R>
@@ -27,6 +32,7 @@ interface Binder {
 }
 
 fun <T> Bindable.event(retainValue: Boolean = true): Event<T> = EventInternal(retainValue)
+@WorkInProgress
 fun <T> Bindable.singleTimeEvent(): Event<T> = SingleTimeEventInternal()
 fun <T> Bindable.receiver(block: (T) -> Unit): Receiver<T> = ReceiverInternal(block)
 

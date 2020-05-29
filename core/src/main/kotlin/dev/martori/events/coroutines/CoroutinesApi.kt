@@ -12,6 +12,7 @@ fun bind(coroutineScope: CoBindable? = null, bindBlock: Binder.() -> Unit): Bind
     coroutineScope?.binder?.apply(bindBlock) ?: GlobalBind.bind(bindBlock)
 
 fun <T> CoBindable.event(retainValue: Boolean = true): Event<T> = EventInternal(retainValue)
+@WorkInProgress
 fun <T> CoBindable.singleTimeEvent(): Event<T> = SingleTimeEventInternal()
 fun <T> CoBindable.receiver(block: (T) -> Unit): Receiver<T> = ReceiverInternal(block)
 fun <T> CoBindable.suspendReceiver(block: suspend CoroutineScope.(T) -> Unit): Receiver<T> = SuspendReceiverInternal(block, this)

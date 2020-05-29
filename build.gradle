@@ -1,6 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = "1.3.61"
+    ext.kotlin_version = "1.3.72"
 
     repositories {
         google()
@@ -53,32 +53,32 @@ subprojects {
                 from android.sourceSets.main.java.srcDirs
             }
         }
-        if (shouldPublish) {
-            publishing {
-                publications {
-                    maven(MavenPublication) {
-                        artifactId = "$rootProject.name-$project.name"
-                        if (isJava) {
-                            from components.java
-                            artifact jvmSourcesJar
-                        } else if (isAndroid) {
-                            from components.android
-                            artifact androidSourcesJar
-                        }
-                    }
-                }
-                repositories {
-                    maven {
-                        name 'NexusSNAPSHOT'
-                        url snapshotsRepositoryUrl
-                        credentials {
-                            username = deployRepoUsername
-                            password = deployRepoPassword
-                        }
-                    }
-                }
-            }
-        }
+//        if (shouldPublish) {
+//            publishing {
+//                publications {
+//                    maven(MavenPublication) {
+//                        artifactId = "$rootProject.name-$project.name"
+//                        if (isJava) {
+//                            from components.java
+//                            artifact jvmSourcesJar
+//                        } else if (isAndroid) {
+//                            from components.android
+//                            artifact androidSourcesJar
+//                        }
+//                    }
+//                }
+//                repositories {
+//                    maven {
+//                        name 'NexusSNAPSHOT'
+//                        url snapshotsRepositoryUrl
+//                        credentials {
+//                            username = deployRepoUsername
+//                            password = deployRepoPassword
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 }
 

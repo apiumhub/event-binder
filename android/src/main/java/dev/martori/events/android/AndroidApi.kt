@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 typealias ViewBindable = LifecycleOwner
 
 fun <T> ViewBindable.event(retainValue: Boolean = true): Event<T> = lifecycleScope.event(retainValue)
+@WorkInProgress
 fun <T> ViewBindable.singleTimeEvent(): Event<T> = lifecycleScope.singleTimeEvent()
 fun <T> ViewBindable.receiver(block: (T) -> Unit): Receiver<T> = lifecycleScope.receiver(block)
 fun <T> ViewBindable.suspendReceiver(block: suspend CoroutineScope.(T) -> Unit): Receiver<T> = lifecycleScope.suspendReceiver(block)

@@ -38,6 +38,7 @@ internal class InternalBinder(private val coroutineScope: CoroutineScope = inter
     private fun <T> Receiver<T>.func(data: T) = (this as ReceiverInternal<T>).func(data)
 }
 
+@WorkInProgress
 internal class SingleTimeEventInternal<T> : Event<T> {
     private val channel = Channel<T>(CONFLATED)
 
