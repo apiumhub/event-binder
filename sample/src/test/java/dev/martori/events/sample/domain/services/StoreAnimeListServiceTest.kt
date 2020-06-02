@@ -3,12 +3,14 @@ package dev.martori.events.sample.domain.services
 import dev.martori.events.sample.binding.models.AnimeListRequest
 import dev.martori.events.sample.domain.entities.Anime
 import dev.martori.events.sample.domain.repositories.AnimeRepository
+import dev.martori.events.test.Dispatched
 import dev.martori.events.test.Parameter
 import dev.martori.events.test.shouldDispatch
 import dev.martori.events.test.withParameter
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import junit.framework.TestCase.*
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 
@@ -33,11 +35,15 @@ class StoreAnimeListServiceTest {
 
     @Test
     fun `load anime dispatches fetch and error events if request fails`() {
-        coEvery { repository.getList(any()) } throws Error()
+        val error =  Error()
+        coEvery { repository.getList(any()) } throws error
 
         sut.loadAnime withParameter request shouldDispatch {
             sut.startFetching withParameter Unit
-            sut.errorReceived withAny Parameter
+            sut.errorReceived withType Error::class
+            sut.errorReceived assertOverParameter {
+                assertEquals(error, it.cause)
+            }
         }
     }
 

@@ -9,7 +9,7 @@ import dev.martori.events.coroutines.bind
 import dev.martori.events.coroutines.receiver
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Assert.fail
+import org.junit.Assert.*
 import kotlin.reflect.KClass
 import kotlin.reflect.full.callSuspend
 import kotlin.reflect.full.declaredFunctions
@@ -27,7 +27,7 @@ typealias Assertion<T> = (T) -> Unit
 
 internal class TestBinderInternal(scope: CoBindable, binder: Binder) : TestBinder, Binder by binder, CoBindable by scope {
 
-    private val assertions = mutableMapOf<Event<*>, List<Assertion<*>>>()
+    private val assertions = mutableMapOf<Event<*>, MutableList<Assertion<*>>>()
     internal var counter = 0
 
     override infix fun <T> Event<T>.assertOverParameter(block: (T) -> Unit) {
@@ -42,19 +42,21 @@ internal class TestBinderInternal(scope: CoBindable, binder: Binder) : TestBinde
         assertions.forEach { (out, list) ->
             var index = 0
             out via receiver {
-                list.getOrElse(index) { {} }(it)
-                index++
+                while (index < list.size) {
+                    list.getOrElse(index) { {} }(it) //unsafe generics casting prevents calling directly the method, this ensures all assertions al called
+                    index++
+                }
             }
         }
     }
 
-    private fun <T> Event<T>.getAssertions() = assertions.getOrPut(this) { mutableListOf<Assertion<T>>() } as? MutableList<Assertion<T>>
+    private fun <T> Event<T>.getAssertions() = assertions.getOrPut(this) { mutableListOf() } as? MutableList<Assertion<T>>
 
     override infix fun <T> Event<T>.withParameter(param: T) {
         counter++
         getAssertions()?.add {
             counter--
-            assert(it == param) { "value mismatch expected: $param but was $it" }
+            assertEquals("value mismatch expected: $param but was $it", param, it)
         }
     }
 
@@ -62,7 +64,7 @@ internal class TestBinderInternal(scope: CoBindable, binder: Binder) : TestBinde
         counter++
         getAssertions()?.add { value ->
             counter--
-            value?.let { assert(type.isInstance(it)) { "type mismatch expected: $type but was ${it::class}" } }
+            value?.let { assertTrue("type mismatch expected: $type but was ${it::class}", type.isInstance(it)) }
         }
     }
 
@@ -70,7 +72,7 @@ internal class TestBinderInternal(scope: CoBindable, binder: Binder) : TestBinde
         counter++
         getAssertions()?.add { value ->
             counter--
-            assert(type.isInstance(value)) { "type mismatch expected: $type but was ${value::class}" }
+            assertTrue("type mismatch expected: $type but was ${value::class}", type.isInstance(value))
         }
     }
 
@@ -95,7 +97,7 @@ private fun testBind(dispatch: suspend () -> Unit, block: suspend TestBinder.() 
         testB.runAssertions()
         dispatch()
         testB.unbind()
-        assert(testB.counter == 0) { "There were ${testB.counter} wanted but not dispatched Event" }
+        assertEquals("There were ${testB.counter} wanted but not dispatched Event", 0, testB.counter)
     }
 }
 
