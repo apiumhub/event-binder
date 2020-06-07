@@ -72,7 +72,8 @@ dependencies {
     implementation "io.ktor:ktor-client-serialization-jvm:$ktor_version"
     implementation "io.ktor:ktor-server-netty:$ktor_version"
     implementation "io.ktor:ktor-gson:$ktor_version"
-    implementation("io.ktor:ktor-client-logging-jvm:$ktor_version")
+    implementation "io.ktor:ktor-client-logging-jvm:$ktor_version"
+    implementation "ch.qos.logback:logback-classic:1.2.3"
 
     implementation "com.dropbox.mobile.store:store4:$storeVersion"
 
