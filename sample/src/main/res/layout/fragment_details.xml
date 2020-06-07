@@ -9,12 +9,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+
+        <ProgressBar
+            android:id="@+id/animeDetailsProgress"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"/>
+
         <ImageView
             android:id="@+id/animeDetailsCover"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
             android:contentDescription="@string/animecoverimage"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/animeDetailsProgress"
             tools:src="@tools:sample/backgrounds/scenic" />
 
         <TextView

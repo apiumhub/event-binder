@@ -1,5 +1,6 @@
 package dev.martori.events.sample.ui
 
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import dev.martori.events.android.event
@@ -26,12 +27,14 @@ class AnimeListFragment : Fragment(R.layout.fragment_main_list), AnimeListView {
     )
     override val requestAnime: Event<AnimeListRequest> = event()
     override val onError: Receiver<Error> = receiver {
+        mainProgress.isVisible = false
         Toast("Error: ${it.message}")
     }
     override val onLoading: ReceiverU = receiver {
-        Toast("Loading...")
+        mainProgress.isVisible = true
     }
     override val displayAnimeList: Receiver<List<Anime>> = receiver { list ->
+        mainProgress.isVisible = false
         adapter.elements = (adapter.elements + list.map { it.toViewModel() }).distinct()
     }
 
