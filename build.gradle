@@ -67,16 +67,16 @@ subprojects {
                         }
                     }
                 }
-                repositories {
-                    maven {
-                        name 'NexusSNAPSHOT'
-                        url snapshotsRepositoryUrl
-                        credentials {
-                            username = deployRepoUsername
-                            password = deployRepoPassword
-                        }
-                    }
-                }
+//                repositories {
+//                    maven {
+//                        name 'NexusSNAPSHOT'
+//                        url snapshotsRepositoryUrl
+//                        credentials {
+//                            username = deployRepoUsername
+//                            password = deployRepoPassword
+//                        }
+//                    }
+//                }
             }
         }
     }

@@ -4,12 +4,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import dev.martori.events.sample.R
+import dev.martori.events.sample.domain.entities.Id
 import dev.martori.events.sample.ui.inflate
 import dev.martori.events.sample.ui.models.AnimeViewModel
 import kotlinx.android.synthetic.main.item_anime_list.view.*
 import kotlin.properties.Delegates
 
-class AnimeListAdapter(private val endReached: (count: Int) -> Unit, private val clickListener: (id: String) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class AnimeListAdapter(private val endReached: (count: Int) -> Unit, private val clickListener: (id: Id) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var elements: List<AnimeViewModel> by Delegates.observable(emptyList()) { _, _, _ ->
         notifyDataSetChanged()
@@ -22,7 +23,7 @@ class AnimeListAdapter(private val endReached: (count: Int) -> Unit, private val
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val anime = elements[position]
-        holder.itemView.itemImage.load(anime.imageUrl)
+        holder.itemView.itemImage.load(anime.imageUrl.uri)
         holder.itemView.itemName.text = anime.name
         if (position >= itemCount - 1) endReached(itemCount)
         holder.itemView.setOnClickListener { clickListener(anime.id) }

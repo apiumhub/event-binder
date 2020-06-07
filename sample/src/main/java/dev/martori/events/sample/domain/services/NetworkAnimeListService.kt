@@ -8,7 +8,7 @@ import dev.martori.events.sample.domain.entities.Anime
 import dev.martori.events.sample.domain.repositories.AnimeRepository
 
 
-class StoreAnimeListService(repository: AnimeRepository) : AnimeListService {
+class NetworkAnimeListService(repository: AnimeRepository) : AnimeListService {
     override val loadAnime: Receiver<AnimeListRequest> = suspendReceiver {
         startFetching()
         runCatching { repository.getList(it) }.fold({

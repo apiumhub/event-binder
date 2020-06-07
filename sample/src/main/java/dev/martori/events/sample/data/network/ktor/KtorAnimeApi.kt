@@ -7,23 +7,29 @@ import io.ktor.client.request.get
 
 class KtorAnimeApi(private val client: HttpClient) : AnimeApi {
     override suspend fun getAnimeList(offset: Int): List<AnimeDto> =
-        client.get<Response<AnimeDto>>("/anime?page[offset]=$offset&sort=-favoritesCount")
-            .dtos()
-            .map { (id, dto) -> dto.copy(id = id) }
+        client.get<ListResponse<AnimeDto>>("/anime?page[offset]=$offset&sort=-favoritesCount").dtos
 
-    override suspend fun getAnime(id: Int): AnimeDto {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override suspend fun getAnime(id: Int): AnimeDto = client.get<Response<AnimeDto>>("/anime/$id").dto
 }
 
-interface NetworkDto {
+interface NetworkDto<T : NetworkDto<T>> {
     val id: String
+    fun withId(id: String): T
 }
 
-data class Response<T : NetworkDto>(val data: List<ResponseObject<T>>) {
-    fun dtos() = data.map { it.id to it.attributes }
+data class ListResponse<T : NetworkDto<T>>(private val data: List<ResponseObject<T>>) {
+    val dtos: List<T>
+        get() = data.map { it.withId() }
 }
 
-data class ResponseObject<T>(val id: String, val attributes: T)
+data class Response<T : NetworkDto<T>>(private val data: ResponseObject<T>) {
+    val dto: T
+        get() = data.withId()
+}
+
+data class ResponseObject<T : NetworkDto<T>>(val id: String, val attributes: T) {
+    fun withId() =
+        attributes.withId(id)
+}
 
 data class AnimeImage(val small: String, val large: String)

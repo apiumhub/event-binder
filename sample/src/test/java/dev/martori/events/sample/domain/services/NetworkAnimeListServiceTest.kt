@@ -3,20 +3,18 @@ package dev.martori.events.sample.domain.services
 import dev.martori.events.sample.binding.models.AnimeListRequest
 import dev.martori.events.sample.domain.entities.Anime
 import dev.martori.events.sample.domain.repositories.AnimeRepository
-import dev.martori.events.test.Dispatched
-import dev.martori.events.test.Parameter
 import dev.martori.events.test.shouldDispatch
 import dev.martori.events.test.withParameter
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import junit.framework.TestCase.*
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 
-class StoreAnimeListServiceTest {
+class NetworkAnimeListServiceTest {
     private val repository: AnimeRepository = mockk(relaxed = true)
-    private val sut = StoreAnimeListService(repository)
+    private val sut = NetworkAnimeListService(repository)
 
     private val request = AnimeListRequest()
 
