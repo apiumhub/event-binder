@@ -7,8 +7,8 @@
     <fragment
         android:id="@+id/list"
         android:name="dev.martori.events.sample.ui.AnimeListFragment"
-        tools:layout="@layout/fragment_main_list"
-        android:label="MainListFragment" >
+        android:label="MainListFragment"
+        tools:layout="@layout/fragment_main_list">
         <action
             android:id="@+id/action_list_to_details"
             app:destination="@id/details" />
@@ -16,7 +16,8 @@
     <fragment
         android:id="@+id/details"
         android:name="dev.martori.events.sample.ui.AnimeDetailsFragment"
-        android:label="AnimeDetailsFragment" >
+        android:label=""
+        tools:layout="@layout/fragment_details">
         <argument
             android:name="animeId"
             app:argType="dev.martori.events.sample.domain.entities.Id" />

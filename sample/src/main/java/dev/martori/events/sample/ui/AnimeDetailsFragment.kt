@@ -1,7 +1,9 @@
 package dev.martori.events.sample.ui
 
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
+import coil.api.load
 import dev.martori.events.android.event
 import dev.martori.events.android.receiver
 import dev.martori.events.core.Event
@@ -16,7 +18,9 @@ import kotlinx.android.synthetic.main.fragment_details.*
 class AnimeDetailsFragment : Fragment(R.layout.fragment_details), AnimeDetailsView {
     override val requestAnimeDetails: Event<Id> = event()
     override val displayAnime: Receiver<Anime> = receiver {
-        sampleText.text = it.id.id
+        (activity as? AppCompatActivity)?.supportActionBar?.title = it.name
+        animeDetailsCover.load(it.coverImage.uri)
+        animeDetailsSynopsis.text = it.synopsis
     }
     override val displayError: Receiver<Error> = receiver {
         Toast("Error: ${it.message}")
