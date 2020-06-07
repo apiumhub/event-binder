@@ -10,5 +10,4 @@ data class AnimeDto(override val id: String, val canonicalTitle: String, val pos
     override fun withId(newId: String) = copy(id = newId)
 }
 
-fun AnimeDto.toDomain() =
-    Anime(Id(id), canonicalTitle, ImageUrl(posterImage.small), ImageUrl(coverImage.large), synopsis)
+fun AnimeDto.toDomain() = Anime(Id(id), canonicalTitle, ImageUrl(posterImage.small), ImageUrl(coverImage.large), synopsis)

@@ -1,6 +1,7 @@
 package dev.martori.events.sample
 
 import android.app.Application
+import dev.martori.events.sample.binding.binds.bindAnimeDetails
 import dev.martori.events.sample.binding.binds.bindAnimeList
 import dev.martori.events.sample.binding.services.AnimeListService
 import dev.martori.events.sample.binding.services.ErrorLogger
@@ -10,7 +11,8 @@ import dev.martori.events.sample.data.repositories.AnimeStoreRepository
 import dev.martori.events.sample.domain.repositories.AnimeRepository
 import dev.martori.events.sample.domain.services.AndroidErrorLogger
 import dev.martori.events.sample.domain.services.NetworkAnimeListService
-import dev.martori.events.sample.ui.AnimeList
+import dev.martori.events.sample.ui.AnimeDetailsFragment
+import dev.martori.events.sample.ui.AnimeListFragment
 import dev.martori.events.sample.ui.koinBind
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
@@ -59,9 +61,13 @@ private val ktor = module {
 }
 
 private val binds = module {
-    koinBind<AnimeList> { animeList ->
-        animeList.bindAnimeList(animeList, get())
+    koinBind<AnimeListFragment> { animeList ->
+        animeList.bindAnimeList(animeList, get(), get())
     }
+    koinBind<AnimeDetailsFragment> { animeDetails ->
+        animeDetails.bindAnimeDetails(animeDetails, get())
+    }
+
 }
 
 val modulesList = listOf(services, binds, ktor, repositories)

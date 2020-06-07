@@ -5,10 +5,12 @@ import dev.martori.events.core.Receiver
 import dev.martori.events.core.ReceiverU
 import dev.martori.events.sample.binding.models.AnimeListRequest
 import dev.martori.events.sample.domain.entities.Anime
+import dev.martori.events.sample.domain.entities.Id
 
 interface AnimeListView {
     val requestAnime: Event<AnimeListRequest>
     val onError: Receiver<Error>
     val onLoading: ReceiverU
     val displayAnimeList: Receiver<List<Anime>>
+    val openAnimeDetails: Event<Id>
 }

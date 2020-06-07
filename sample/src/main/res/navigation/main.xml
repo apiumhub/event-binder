@@ -6,7 +6,19 @@
     app:startDestination="@id/list">
     <fragment
         android:id="@+id/list"
-        android:name="dev.martori.events.sample.ui.AnimeList"
+        android:name="dev.martori.events.sample.ui.AnimeListFragment"
         tools:layout="@layout/fragment_main_list"
-        android:label="MainListFragment" />
+        android:label="MainListFragment" >
+        <action
+            android:id="@+id/action_list_to_details"
+            app:destination="@id/details" />
+    </fragment>
+    <fragment
+        android:id="@+id/details"
+        android:name="dev.martori.events.sample.ui.AnimeDetailsFragment"
+        android:label="AnimeDetailsFragment" >
+        <argument
+            android:name="animeId"
+            app:argType="dev.martori.events.sample.domain.entities.Id" />
+    </fragment>
 </navigation>

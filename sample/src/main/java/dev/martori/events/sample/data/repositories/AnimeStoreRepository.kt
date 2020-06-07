@@ -11,9 +11,7 @@ import dev.martori.events.sample.domain.repositories.AnimeRepository
 
 class AnimeStoreRepository(api: AnimeApi) : AnimeRepository {
     private val listStore = StoreBuilder.fromNonFlow { request: AnimeListRequest ->
-        api.getAnimeList(request.count).map {
-            it.toDomain()
-        }
+        api.getAnimeList(request.count).map { it.toDomain() }
     }.build()
     private val store = StoreBuilder.fromNonFlow { request: AnimeRequest -> api.getAnime(request.id).toDomain() }.build()
 
