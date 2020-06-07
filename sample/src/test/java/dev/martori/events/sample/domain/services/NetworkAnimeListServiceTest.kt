@@ -27,7 +27,7 @@ class NetworkAnimeListServiceTest {
     @Test
     fun `load anime dispatches fetch event`() {
         sut.loadAnime withParameter request shouldDispatch {
-            sut.startFetching withParameter Unit
+            sut.startedFetching withParameter Unit
         }
     }
 
@@ -37,7 +37,7 @@ class NetworkAnimeListServiceTest {
         coEvery { repository.getList(any()) } throws error
 
         sut.loadAnime withParameter request shouldDispatch {
-            sut.startFetching withParameter Unit
+            sut.startedFetching withParameter Unit
             sut.errorReceived withType Error::class
             sut.errorReceived assertOverParameter {
                 assertEquals(error, it.cause)
@@ -51,7 +51,7 @@ class NetworkAnimeListServiceTest {
         coEvery { repository.getList(any()) } returns result
 
         sut.loadAnime withParameter request shouldDispatch {
-            sut.startFetching withParameter Unit
+            sut.startedFetching withParameter Unit
             sut.animeListReceived withParameter result
         }
     }

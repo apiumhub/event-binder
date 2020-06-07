@@ -9,7 +9,7 @@ class KtorAnimeApi(private val client: HttpClient) : AnimeApi {
     override suspend fun getAnimeList(offset: Int): List<AnimeDto> =
         client.get<ListResponse<AnimeDto>>("/anime?page[offset]=$offset&sort=-favoritesCount").dtos
 
-    override suspend fun getAnime(id: Int): AnimeDto = client.get<Response<AnimeDto>>("/anime/$id").dto
+    override suspend fun getAnime(id: String): AnimeDto = client.get<Response<AnimeDto>>("/anime/$id").dto
 }
 
 interface NetworkDto<T : NetworkDto<T>> {

@@ -1,3 +1,7 @@
 package dev.martori.events.sample.binding.models
 
-data class AnimeRequest(val id: Int)
+import dev.martori.events.sample.domain.entities.Id
+
+data class AnimeRequest(private val id: Id) {
+    val requestId: String = id.id
+}

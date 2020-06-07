@@ -1,6 +1,7 @@
 package dev.martori.events.sample.ui
 
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import dev.martori.events.android.event
 import dev.martori.events.android.receiver
 import dev.martori.events.core.Event
@@ -10,7 +11,6 @@ import dev.martori.events.sample.R
 import dev.martori.events.sample.binding.models.AnimeListRequest
 import dev.martori.events.sample.binding.views.AnimeListView
 import dev.martori.events.sample.domain.entities.Anime
-import dev.martori.events.sample.domain.entities.Id
 import dev.martori.events.sample.ui.adapters.AnimeListAdapter
 import dev.martori.events.sample.ui.models.toViewModel
 import kotlinx.android.synthetic.main.fragment_main_list.*
@@ -21,10 +21,9 @@ class AnimeListFragment : Fragment(R.layout.fragment_main_list), AnimeListView {
         endReached = {
             requestAnime(AnimeListRequest(it))
         }, clickListener = {
-            openAnimeDetails(it)
+            findNavController().navigate(AnimeListFragmentDirections.actionListToDetails(it))
         }
     )
-    override val openAnimeDetails: Event<Id> = event()
     override val requestAnime: Event<AnimeListRequest> = event()
     override val onError: Receiver<Error> = receiver {
         Toast("Error: ${it.message}")

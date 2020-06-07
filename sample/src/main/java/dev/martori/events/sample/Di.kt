@@ -3,6 +3,7 @@ package dev.martori.events.sample
 import android.app.Application
 import dev.martori.events.sample.binding.binds.bindAnimeDetails
 import dev.martori.events.sample.binding.binds.bindAnimeList
+import dev.martori.events.sample.binding.services.AnimeDetailsService
 import dev.martori.events.sample.binding.services.AnimeListService
 import dev.martori.events.sample.binding.services.ErrorLogger
 import dev.martori.events.sample.data.network.api.AnimeApi
@@ -10,6 +11,7 @@ import dev.martori.events.sample.data.network.ktor.KtorAnimeApi
 import dev.martori.events.sample.data.repositories.AnimeStoreRepository
 import dev.martori.events.sample.domain.repositories.AnimeRepository
 import dev.martori.events.sample.domain.services.AndroidErrorLogger
+import dev.martori.events.sample.domain.services.NetworkAnimeDetailsService
 import dev.martori.events.sample.domain.services.NetworkAnimeListService
 import dev.martori.events.sample.ui.AnimeDetailsFragment
 import dev.martori.events.sample.ui.AnimeListFragment
@@ -33,6 +35,7 @@ import org.koin.experimental.builder.singleBy
 
 private val services = module {
     singleBy<AnimeListService, NetworkAnimeListService>()
+    singleBy<AnimeDetailsService, NetworkAnimeDetailsService>()
     singleBy<ErrorLogger, AndroidErrorLogger>()
 }
 
@@ -47,12 +50,12 @@ private val ktor = module {
                 serializer = GsonSerializer()
                 acceptContentTypes = listOf(ContentType.parse("application/vnd.api+json"))
             }
+            defaultRequest {
+                host = "kitsu.io/api/edge"
+            }
             install(Logging) {
                 logger = Logger.ANDROID
                 level = LogLevel.ALL
-            }
-            defaultRequest {
-                host = "kitsu.io/api/edge"
             }
         }
     }
@@ -62,7 +65,7 @@ private val ktor = module {
 
 private val binds = module {
     koinBind<AnimeListFragment> { animeList ->
-        animeList.bindAnimeList(animeList, get(), get())
+        animeList.bindAnimeList(animeList, get())
     }
     koinBind<AnimeDetailsFragment> { animeDetails ->
         animeDetails.bindAnimeDetails(animeDetails, get())
@@ -70,7 +73,7 @@ private val binds = module {
 
 }
 
-val modulesList = listOf(services, binds, ktor, repositories)
+val modulesList = services + binds + ktor + repositories
 
 fun Application.initKoin() {
     startKoin {

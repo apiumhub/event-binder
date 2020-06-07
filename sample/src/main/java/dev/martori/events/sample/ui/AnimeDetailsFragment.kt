@@ -5,7 +5,6 @@ import androidx.navigation.fragment.navArgs
 import dev.martori.events.android.event
 import dev.martori.events.android.receiver
 import dev.martori.events.core.Event
-import dev.martori.events.core.EventU
 import dev.martori.events.core.Receiver
 import dev.martori.events.sample.R
 import dev.martori.events.sample.binding.views.AnimeDetailsView
@@ -18,11 +17,10 @@ class AnimeDetailsFragment : Fragment(R.layout.fragment_details), AnimeDetailsVi
     override val displayAnime: Receiver<Anime> = receiver {
         sampleText.text = it.id.id
     }
-    override val goBack: EventU = event()
     private val args: AnimeDetailsFragmentArgs by navArgs()
 
     init {
-        whenCreated {
+        whenViewCreated {
             applyBinds()
             requestAnimeDetails(args.animeId)
         }

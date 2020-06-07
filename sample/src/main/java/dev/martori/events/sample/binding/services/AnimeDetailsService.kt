@@ -4,12 +4,12 @@ import dev.martori.events.core.Bindable
 import dev.martori.events.core.Event
 import dev.martori.events.core.EventU
 import dev.martori.events.core.Receiver
-import dev.martori.events.sample.binding.models.AnimeListRequest
 import dev.martori.events.sample.domain.entities.Anime
+import dev.martori.events.sample.domain.entities.Id
 
-interface AnimeListService : Bindable {
-    val loadAnime: Receiver<AnimeListRequest>
+interface AnimeDetailsService : Bindable {
+    val loadAnime: Receiver<Id>
     val errorReceived: Event<Error>
     val startedFetching: EventU
-    val animeListReceived: Event<List<Anime>>
+    val animeReceived: Event<Anime>
 }

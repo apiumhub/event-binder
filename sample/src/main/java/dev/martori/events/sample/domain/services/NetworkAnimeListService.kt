@@ -10,7 +10,7 @@ import dev.martori.events.sample.domain.repositories.AnimeRepository
 
 class NetworkAnimeListService(repository: AnimeRepository) : AnimeListService {
     override val loadAnime: Receiver<AnimeListRequest> = suspendReceiver {
-        startFetching()
+        startedFetching()
         runCatching { repository.getList(it) }.fold({
             animeListReceived(it)
         }, {
@@ -18,6 +18,6 @@ class NetworkAnimeListService(repository: AnimeRepository) : AnimeListService {
         })
     }
     override val errorReceived: Event<Error> = event(retainValue = false)
-    override val startFetching: EventU = event(retainValue = false)
+    override val startedFetching: EventU = event(retainValue = false)
     override val animeListReceived: Event<List<Anime>> = event()
 }
