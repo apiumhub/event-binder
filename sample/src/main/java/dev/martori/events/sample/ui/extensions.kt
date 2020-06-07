@@ -41,6 +41,6 @@ inline fun <reified T> Module.koinBind(noinline block: Scope.(T) -> Binder) {
 fun ViewGroup.inflate(@LayoutRes layoutId: Int): View = LayoutInflater.from(context).inflate(layoutId, this, false)
 
 fun Context.toast(message: CharSequence) =
-    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 
 fun Fragment.Toast(message: CharSequence) = context?.toast(message)

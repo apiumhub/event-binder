@@ -6,6 +6,7 @@ import dev.martori.events.android.event
 import dev.martori.events.android.receiver
 import dev.martori.events.core.Event
 import dev.martori.events.core.Receiver
+import dev.martori.events.core.ReceiverU
 import dev.martori.events.sample.R
 import dev.martori.events.sample.binding.views.AnimeDetailsView
 import dev.martori.events.sample.domain.entities.Anime
@@ -17,6 +18,13 @@ class AnimeDetailsFragment : Fragment(R.layout.fragment_details), AnimeDetailsVi
     override val displayAnime: Receiver<Anime> = receiver {
         sampleText.text = it.id.id
     }
+    override val displayError: Receiver<Error> = receiver {
+        Toast("Error: ${it.message}")
+    }
+    override val displayLoading: ReceiverU = receiver {
+        Toast("Loading...")
+    }
+
     private val args: AnimeDetailsFragmentArgs by navArgs()
 
     init {

@@ -16,5 +16,7 @@ fun ViewBindable.bindAnimeList(view: AnimeListView, service: AnimeListService) =
 
 fun ViewBindable.bindAnimeDetails(view: AnimeDetailsView, service: AnimeDetailsService) = bind {
     view.requestAnimeDetails via service.loadAnime
+    view.displayError via service.errorReceived
+    view.displayLoading via service.startedFetching
     view.displayAnime via service.animeReceived
 }
