@@ -36,11 +36,13 @@ class AnimeListFragment : Fragment(R.layout.fragment_main_list), AnimeListView {
     }
 
     init {
-        whenCreated {
+        whenViewCreated {
             applyBinds()
             requestAnime(AnimeListRequest())
-        }
-        whenViewCreated {
+            /*
+            * TODO find a way to prevent calling this on orientation changes
+            *  the solution is no on a single time event since it will be recreated with the fragment
+            * */
             mainList.adapter = adapter
         }
     }
