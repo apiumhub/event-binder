@@ -32,8 +32,8 @@ class AnimeDetailsFragment : Fragment(R.layout.fragment_details), AnimeDetailsVi
     private val args: AnimeDetailsFragmentArgs by navArgs()
 
     init {
+        applyBinds()
         whenViewCreated {
-            applyBinds()
             requestAnimeDetails(args.animeId)
         }
     }
