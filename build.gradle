@@ -22,8 +22,8 @@ plugins {
 }
 
 allprojects {
-    group = "dev.martori"
-    version = "1.0.0"
+    group = "com.apiumhub"
+    version = "0.1.0"
 
     repositories {
         google()
