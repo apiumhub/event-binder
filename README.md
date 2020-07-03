@@ -20,8 +20,7 @@ The `Receiver<T>` tipe defines an action this interfaces can receive. In this ex
 The `EventU` and `ReceiverU` are aliases for events and receivers that don't need to send or receive a parameter
 ## Bind them
 ```kotlin
-fun ViewBindable.bindData
-List(view: DataListView, service: dataListService) = bind {
+fun ViewBindable.bindDataList(view: DataListView, service: dataListService) = bind {
     view.displayList via service.dataListReceived
     view.onError via service.errorReceived
     view.onLoading via service.startedFetching
