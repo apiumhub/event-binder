@@ -23,11 +23,9 @@ interface TestBinder : Binder, CoBindable {
     infix fun <T> Event<T>.never(dispatched: Dispatched)
 }
 
-typealias Assertion<T> = (T) -> Unit
-
 internal class TestBinderInternal(scope: CoBindable, binder: Binder) : TestBinder, Binder by binder, CoBindable by scope {
 
-    private val assertions = mutableMapOf<Event<*>, MutableList<Assertion<*>>>()
+    private val assertions = mutableMapOf<Event<*>, MutableList<(Any?) -> Unit>>()
     internal var counter = 0
 
     override infix fun <T> Event<T>.assertOverParameter(block: (T) -> Unit) {
@@ -40,17 +38,15 @@ internal class TestBinderInternal(scope: CoBindable, binder: Binder) : TestBinde
 
     fun runAssertions() {
         assertions.forEach { (out, list) ->
-            var index = 0
             out via receiver {
-                while (index < list.size) {
-                    list.getOrElse(index) { {} }(it) //unsafe generics casting prevents calling directly the method, this ensures all assertions al called
-                    index++
+                list.forEach { assertion ->
+                    assertion(it)
                 }
             }
         }
     }
 
-    private fun <T> Event<T>.getAssertions() = assertions.getOrPut(this) { mutableListOf() } as? MutableList<Assertion<T>>
+    private fun <T> Event<T>.getAssertions() = assertions.getOrPut(this) { mutableListOf() } as? MutableList<(T) -> Unit>
 
     override infix fun <T> Event<T>.withParameter(param: T) {
         counter++
